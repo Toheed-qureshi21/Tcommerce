@@ -74,3 +74,7 @@ export const logout = TryCatch(async (req, res) => {
     return res.status(200).json({message:"User logged out successfully"});
 
 });
+
+export const getProfile = TryCatch(async (req, res) => {   
+            return req.user;
+ });

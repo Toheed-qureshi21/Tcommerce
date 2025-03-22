@@ -75,14 +75,10 @@ export const logout = TryCatch(async (req, res) => {
 
 });
 
-<<<<<<< HEAD
+
 export const getProfile = TryCatch(async (req, res) => {
     const user = req.user;
     const userWithoutPassword = {...user._doc,password:undefined};
     return res.status(200).json(userWithoutPassword);
 });
-=======
-export const getProfile = TryCatch(async (req, res) => {   
-            return req.user;
- });
->>>>>>> feature/frontend
+

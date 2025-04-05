@@ -29,20 +29,41 @@ export const getProductsByCategory = TryCatch(async (req, res) => {
 
 export const getProductsByRecommedations = TryCatch(async (req, res) => {
 
+    // const products = await Product.aggregate([
+    //     {
+    //         $sample: { size: 10 }
+    //     },
+    //     {
+    //         $project: {
+    //             _id: 1,
+    //             name: 1,
+    //             price: 1,
+    //             image: 1,
+    //             description: 1
+    //         },
+    //     },
+    // ]);
     const products = await Product.aggregate([
+        { $sort: { createdAt: -1 } }, // Optional: sort latest
         {
-            $sample: { size: 3 }
+          $group: {
+            _id: "$category", // group by category
+            product: { $first: "$$ROOT" } // pick one product per category
+          }
         },
+        { $replaceRoot: { newRoot: "$product" } },
         {
-            $project: {
-                _id: 1,
-                name: 1,
-                price: 1,
-                image: 1,
-                description: 1
-            },
-        },
-    ]);
+          $project: {
+            _id: 1,
+            name: 1,
+            price: 1,
+            image: 1,
+            category: 1,
+            description: 1
+          }
+        }
+      ]);
+      
     if (!products) {
         return res.status(404).json("No products found for recommedations");
     }

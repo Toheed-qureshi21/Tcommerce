@@ -3,20 +3,29 @@ import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import { toggleTheme } from '../../redux/slices/theme.slice';
 import { useState } from 'react';
+import { logout } from '../../API/api';
 
 const Navbar = () => {
     const { theme } = useSelector(state => state.theme);
-    const [isOn,setIsOn] = useState(false);
+    const [isOn, setIsOn] = useState(false);
     const dispatch = useDispatch();
-    const isUser = false;
-    const isAdmin = true
+    const { user: isUser } = useSelector(state => state.auth);
+    const isAdmin = isUser?.role === "admin"
+
+
 
     const handleThemeChange = () => {
         setIsOn(!isOn);
         dispatch(toggleTheme());
     }
+    const handleLogout = async() => {
+      await logout(dispatch);
+    }
+    
     return (
-        <header className={`w-full px-4  py-6 shadow-sm ${theme?"bg-zinc-900 text-white":"bg-white text-black"} transition-colors duration-300 linear `}>
+        <header className={`w-screen px-4  py-6 shadow-xl ${theme ? "bg-gradient-to-r from-[#1a0b1f] via-[#2b1a38] to-[#0e0a18]  text-white" : "bg-white text-black"} 
+        transition-colors duration-300 linear sticky top-0  z-100
+        `}>
 
             <nav className={`mx-8 container flex justify-between items-center  `}>
                 <h1 className='font-sans text-4xl font-jaini'>TCOMMERCE</h1>
@@ -29,7 +38,7 @@ const Navbar = () => {
 
                     <li >
                         <button className={`flex items-center transition-transform ease-linear  ${isOn ? "rotate-360" : ""}`} onClick={handleThemeChange}>{
-                            theme ? <Sun size={20} className='text-amber-400'/> : <Moon size={20} />
+                            theme ? <Sun size={20} className='text-amber-400' /> : <Moon size={20} />
                         } </button>
                     </li>
                     {
@@ -46,7 +55,7 @@ const Navbar = () => {
                                 {
                                     isAdmin ? (
                                         <li>
-                                            <NavLink to="/dashboard" className="flex items-center gap-0.5 bg-green-600 hover:bg-green-700 transition-all linear px-2.5 py-1 rounded-md">
+                                            <NavLink to="/dashboard" className="flex items-center gap-0.5 bg-green-600 text-white hover:bg-green-700 transition-all linear px-2.5 py-1 rounded-md">
                                                 <Lock size={20} /> Dashboard
                                             </NavLink>
                                         </li>
@@ -62,7 +71,7 @@ const Navbar = () => {
 
                                 <li>
                                     <NavLink to="/">
-                                        <button className='flex gap-2 items-center bg-sky-700 hover:bg-sky-800 transition-all linear px-2.5 py-1 rounded-md '><LogIn size={20} />Logout</button>
+                                        <button onClick={handleLogout} className='flex gap-2 items-center bg-sky-600 text-white hover:bg-sky-700 transition-all linear px-2.5 py-1 rounded-md '><LogIn size={20} />Logout</button>
                                     </NavLink>
                                 </li>
                             </>

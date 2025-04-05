@@ -77,8 +77,14 @@ export const logout = TryCatch(async (req, res) => {
 
 
 export const getProfile = TryCatch(async (req, res) => {
-    const user = req.user;
-    const userWithoutPassword = {...user._doc,password:undefined};
-    return res.status(200).json(userWithoutPassword);
+  
+
+    // const user = req.user;
+    const user = await User.findById(req.user._id);
+      if (!user) {
+        return res.status(401).json({ message: "Unauthorized: No user found" });
+    }
+    const userWithoutPassword = { ...user._doc, password: undefined };
+    return res.status(200).json({userWithoutPassword});
 });
 

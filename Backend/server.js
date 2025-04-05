@@ -8,7 +8,7 @@ import cartRoutes from "./Routes/cartRoutes.js"
 import couponRoutes from "./Routes/couponRoutes.js"
 import paymentRoutes from "./Routes/paymentRoutes.js"
 import analyticsRoutes from "./Routes/analyticsRoute.js"
-
+import cors from "cors"
 dotenv.config()
 
 connectToDB();
@@ -18,7 +18,12 @@ const PORT = process.env.PORT;
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
-app.use(cookieParser())
+app.use(cookieParser());
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 app.use("/api/auth",userRouter);
 app.use("/api/products",productRoutes);

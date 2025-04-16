@@ -8,7 +8,7 @@ import Cart from "./components/pages/Cart";
 import Profile from "./components/pages/Profile";
 import Dashboard from "./components/pages/Dashboard";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { checkingUser } from "./API/api.js";
 import Category from "./components/pages/Category.jsx";
 
@@ -19,14 +19,23 @@ function App() {
   const { theme } = useSelector(state => state.theme);
   const {user,loading } = useSelector(state => state.auth);
   const location = useLocation();
+
+  const hasCheckedUser = useRef(false);
+  
   useEffect(() => {
     
-      if (!user && location.pathname !== "/login" && location.pathname !== "/signup" ) {
-       checkingUser(dispatch);
+      if (
+        !user &&
+        !hasCheckedUser.current &&
+         location.pathname !== "/login" &&
+         location.pathname !== "/signup" 
+        ) {
+          hasCheckedUser.current =true;
+        checkingUser(dispatch,false);
       }
     
    
-  }, [dispatch]);
+  }, [dispatch,user,location.pathname]);
 
   
 

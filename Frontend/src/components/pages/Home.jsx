@@ -30,7 +30,7 @@ const Home = () => {
       </section>
 
       
-      <section className="transition-colors duration-300 px-4 sm:px-8 py-10">
+      <section className="transition-colors duration-300 px-4 sm:px-8 py-[2rem] space-y-[3rem] h-[35rem]">
         <h3 className="text-center py-8 text-2xl font-semibold">Latest Collections</h3>
       
         <Crousel/>

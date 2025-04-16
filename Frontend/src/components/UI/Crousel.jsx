@@ -20,7 +20,7 @@ const Crousel = () => {
           <img
             src={p.imageUrl}
             alt={p.name}
-            className="h-full w-full object-cover absolute top-0 left-0"
+            className="h-full w-full object-cover absolute top-0 left-0 hover:scale-110 transition-all duration-300"
             loading='lazy'
             />
           <p className="absolute bottom-4 left-4 text-white font-bold bg-black/50 px-2 py-1 rounded">

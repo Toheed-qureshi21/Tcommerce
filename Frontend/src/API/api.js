@@ -2,6 +2,7 @@ import axios from "axios";
 import { authChecking, authFailure, authStart, authSuccess,authCheckingFailure,authCheckingSuccess, resetAuth } from "../redux/slices/auth.slice.js";
 import { toast } from "react-toastify";
 import { setError, setLoading, setProducts } from "../redux/slices/product.slice.js";
+import { store } from '../redux/store/store.js'
 
 
 const URL = "http://localhost:3000/api" 
@@ -48,7 +49,6 @@ export const login = async (dispatch, {email, password}) => {
 
                 const { data } = await api.post("/auth/login", { email, password });
                 dispatch(authSuccess(data?.userWithoutPassword))
-                console.log(data);
                 return toast.success(data?.message);       
             } catch (error) {
                 dispatch(authFailure(error?.response?.data?.message));
@@ -56,15 +56,17 @@ export const login = async (dispatch, {email, password}) => {
             }
 }
 
-export const checkingUser = async (dispatch,showToast) => {
+export const checkingUser = async (dispatch,showToast=false) => {
     dispatch(authStart());
+    // const currentState = store.getState()
+    // if(currentState?.auth?.user) return;
     try {
         const response = await api.get("/auth/profile");
         dispatch(authSuccess(response?.data?.userWithoutPassword));
         showToast && toast.success(response?.data?.message);
     } catch (error) {
         dispatch(authFailure(error?.response?.data?.message));
-        toast.error(error?.response?.data?.message);
+        showToast && toast.error(error?.response?.data?.message);
     }
 }
 

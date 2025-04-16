@@ -36,7 +36,7 @@ const AuthForm = ({
     }
     
     const handleGuestLogin =() => {
-      dispatch(updateFormData({email:"example@.com",password:"12345678"}));
+      dispatch(updateFormData({email:"example@gmail.com",password:"000000"}));
     }
     
     return (

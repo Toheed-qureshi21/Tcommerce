@@ -10,6 +10,7 @@ const Login = () => {
   const navigate = useNavigate();
   const handleLogin = async(formData) => {
       await login(dispatch,formData);
+      sessionStorage.setItem("fromLogin", "true");
       return navigate("/")
   }
 

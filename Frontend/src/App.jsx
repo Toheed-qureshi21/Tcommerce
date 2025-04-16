@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import {Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import Navbar from "./components/UI/Navbar";
 import Home from "./components/pages/Home";

@@ -8,7 +8,7 @@ router.get("/",authenticate,authorized,getAllProductsOfAdmin);
 router.get("/featured",getFeaturedProducts)
 router.get("/category/:category",getProductsByCategory)
 router.get("/recommendations",getProductsByRecommedations)
-router.post("/create",authenticate,authorized,createProduct)
+router.post("/create-product",authenticate,authorized,createProduct)
 router.patch("/update/:id",authenticate,authorized,changeFeatured)
 router.delete("/delete/:id",authenticate,authorized,deleteProduct)
 

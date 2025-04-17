@@ -14,7 +14,7 @@ const productSlice = createSlice({
         },
         setProducts(state,action){
             state.loading = false,
-            state.products = action.payload
+            state.products = [...state.products, ...action.payload];
         },
         setError(state,action){
             state.loading = false,

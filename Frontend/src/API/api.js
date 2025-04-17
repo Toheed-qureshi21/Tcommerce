@@ -1,7 +1,7 @@
 import axios from "axios";
 import { authChecking, authFailure, authStart, authSuccess, authCheckingFailure, authCheckingSuccess, resetAuth } from "../redux/slices/auth.slice.js";
 import { toast } from "react-toastify";
-import { setError, setLoading, setProducts } from "../redux/slices/product.slice.js";
+import { deleteProductFromState, setError, setLoading, setLoadingDelete, setLoadingFeature, setProducts, updateSingleProduct } from "../redux/slices/product.slice.js";
 
 
 
@@ -83,16 +83,67 @@ export const logout = async (dispatch) => {
     }
 }
 
+// This function will create new product 
 export const createProduct = async (dispatch,newProduct) => {
     dispatch(setLoading(true));
     try {
         const response = await api.post("/products/create-product",newProduct);
-        dispatch(setProducts(prev => [...prev, ...response?.data?.products]));
-        toast.success(response?.data?.message || "Product created successfully!");
+        dispatch(setProducts(response?.data?.product || []));
         dispatch(setLoading(false));
+        
+        toast.success(response?.data?.message || "Product created successfully!");
     } catch (error) {
         dispatch(setLoading(false));
         dispatch(setError(error));
         return toast.error(error?.response?.data?.message);
+    }
+}
+
+// This function will fetch all products of admin
+export const fetchAllProductsOfAdmin = async (dispatch) => {
+    dispatch(setLoading(true));
+    try {
+        const response = await api.get("/products");
+        const products = response?.data?.products
+        
+        dispatch(setProducts(products));
+        dispatch(setLoading(false));
+    } catch (error) {
+        dispatch(setLoading(false));
+        dispatch(setError(error));
+        return toast.error(error?.response?.data?.message||"Failed to fetch products. Please try again.");
+    }
+}
+
+// Function to featured any product by admin
+export const toggleFeaturedProduct = async (dispatch,productId) => {
+    dispatch(setLoadingFeature(true));
+    try {
+        const response = await api.patch(`/products/update/${productId}`);
+        const updatedProduct = response?.data?.updatedProduct
+        console.log("updated products",updatedProduct);
+        
+        dispatch(updateSingleProduct(updatedProduct));
+        return toast.success(response?.data?.message || "Product featured successfully!");
+    } catch (error) {
+        dispatch(setError(error));
+        return toast.error(error?.response?.data?.message || "Failed to feature product. Please try again.");
+    } finally{
+        dispatch(setLoadingFeature(false));
+    }
+}
+
+// Function to delete any product by admin
+export const deleteProduct = async (dispatch,productId) => {
+    dispatch(setLoadingDelete(true));
+    try {
+            const response = await api.delete(`/products/delete/${productId}`);
+            dispatch(deleteProductFromState(productId));
+            dispatch(setLoadingDelete(false));
+            return toast.success(response?.data?.message || "Product deleted successfully!");
+    } catch (error) {
+        dispatch(setLoadingDelete(false))
+        dispatch(setError(error));
+        return toast.error(error?.response?.data?.message || "Failed to Delete product. Please try again.");
     }
 }

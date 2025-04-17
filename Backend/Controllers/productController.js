@@ -3,7 +3,8 @@ import { Product } from "../Models/productModel.js";
 import { TryCatch } from "../Utils/TryCatch.js";
 
 export const getAllProductsOfAdmin = TryCatch(async (req, res) => {
-    const products = await Product.find({});
+    const userId = req.user._id;
+    const products = await Product.find({userId}).lean();
     if (!products) {
         return res.status(404).json("No products found");
     }
@@ -36,6 +37,7 @@ export const getProductsByRecommedations = TryCatch(async (req, res) => {
         {
             $project: {
                 _id: 1,
+                userId: 1,
                 name: 1,
                 price: 1,
                 image: 1,
@@ -53,6 +55,7 @@ export const getProductsByRecommedations = TryCatch(async (req, res) => {
 export const createProduct = TryCatch(async (req, res) => {
 
     const { name, description, price, category, image } = req.body;
+    const userId = req.user._id;
 
     if (!name || !description || !price || !category || !image) {
         return res.status(400).json({ message: "All fields are required" });
@@ -60,6 +63,7 @@ export const createProduct = TryCatch(async (req, res) => {
     const cloduinaryResponse = await cloudinary.uploader.upload(image, { folder: "products" });
     const cloudinarySuccessfullResponse = cloduinaryResponse.secure_url ? cloduinaryResponse.secure_url : "";
     const product = await Product.create({
+        userId,
         name,
         description,
         price,

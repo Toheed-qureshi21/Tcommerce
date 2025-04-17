@@ -3,7 +3,6 @@ import "../../index.css"
 import React, { useState } from 'react'
 import { createProduct } from '../../API/api';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 
 const categories = ["jeans", "t-shirts", "shoes", "glasses", "jackets", "suits", "bags"];
 const CreateProductTab = () => {
@@ -40,11 +39,8 @@ const CreateProductTab = () => {
         category: "",
         image: "",
       });
-      toast.success("Product created successfully!");
     } catch (error) {
       console.log("GETTING ERROR IN CREATE PRODUCT", error);
-      toast.error("Failed to create product. Please try again.");
-
     }
   }
 

@@ -29,3 +29,6 @@ h1:hover{
 .common-input:focus {
   box-shadow: 0 0 0 1px #f59e0b;
 }
+.common-th{
+  @apply px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider
+}

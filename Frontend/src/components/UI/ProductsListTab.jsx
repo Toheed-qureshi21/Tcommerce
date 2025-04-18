@@ -85,13 +85,11 @@ const ProductsListTab = () => {
 									<td className='px-6 py-4 whitespace-nowrap'>
 											<button
 												 onClick={() => {
-													console.log("Feature button clicked");
 													toggleFeaturedProduct(dispatch, product?._id);
-													dispatch(setLoadingFeature(false))
 												  }}
 												className={`p-1 rounded-full ${product.isFeatured ? "bg-yellow-400 text-gray-900" : "bg-gray-800 text-gray-100"
 													} hover:bg-yellow-600 transition-colors duration-200`}
-													// disabled={loadingFeature}
+													disabled={loadingFeature}
 											>
 												<Star className='h-5 w-5' />
 											</button>

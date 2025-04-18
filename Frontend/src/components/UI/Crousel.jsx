@@ -13,7 +13,7 @@ const Crousel = () => {
         <div className="space-x-1" key={p.name}>
     
         <NavLink
-          to={`/category/${p.name}`}
+          to={`/category/${p.name.toLowerCase()}`}
           className="inline-block  min-w-[12rem] h-[12rem] border relative hover:brightness-75 transition-all duration-300 rounded overflow-hidden "
           
           >

@@ -26,6 +26,11 @@ const productSlice = createSlice({
       state.loading = false;
       state.products = action.payload;
     },
+    addProduct(state, action) {
+      state.products.push(action.payload);
+      state.loading = false;
+    },
+    
     setError(state, action) {
       state.loading = false;
       state.loadingFeature = false;
@@ -51,6 +56,7 @@ const productSlice = createSlice({
 export const {
   setLoading,
   setProducts,
+  addProduct,
   setError,
   deleteProductFromState,
   updateSingleProduct,

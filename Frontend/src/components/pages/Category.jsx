@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { fetchCategoryWiseProducts } from '../../API/api';
+import { addToCart, fetchCategoryWiseProducts } from '../../API/api';
 import { useDispatch, useSelector } from "react-redux"
 
 import ProductCard from '../UI/ProductCard';
+import { asyncThunkCreator } from '@reduxjs/toolkit';
 
 const Category = () => {
   const { category } = useParams();
@@ -13,9 +14,10 @@ const Category = () => {
   useEffect(() => {
     window.scrollTo(0, 0)
     fetchCategoryWiseProducts(dispatch, category);
-    console.log(products);
+  }, []);
+ 
+  
 
-  }, [])
   return (
     <section className="min-h-screen">
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-16">

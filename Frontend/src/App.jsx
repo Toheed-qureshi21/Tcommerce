@@ -9,7 +9,7 @@ import Profile from "./components/pages/Profile";
 import Dashboard from "./components/pages/Dashboard";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef } from "react";
-import { checkingUser } from "./API/api.js";
+import { checkingUser, fetchCartItems } from "./API/api.js";
 import Category from "./components/pages/Category.jsx";
 
 
@@ -19,9 +19,12 @@ function App() {
   const { theme } = useSelector(state => state.theme);
   const {user,loading } = useSelector(state => state.auth);
   const location = useLocation();
-
   const hasCheckedUser = useRef(false);
-  
+  useEffect(()=>{
+    if (user) {
+      fetchCartItems(dispatch);
+    }
+  },[dispatch,user])
   useEffect(() => {
     
       if (
@@ -60,7 +63,7 @@ function App() {
           <Route path="/dashboard" element={user?.role === "admin" ? <Dashboard /> : <Navigate to="/" />} />
           <Route path="/category/:category" element={!user ? <Navigate to="/login" /> : <Category/>} />
         </Routes>
-        <ToastContainer />
+        <ToastContainer position="top-center"/>
       </main>
     )
   }

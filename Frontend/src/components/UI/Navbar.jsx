@@ -10,6 +10,7 @@ const Navbar = () => {
     const [isOn, setIsOn] = useState(false);
     const dispatch = useDispatch();
     const { user: isUser } = useSelector(state => state.auth);
+    const { cartItems } = useSelector(state => state.cart);
     const isAdmin = isUser?.role === "admin"
 
 
@@ -18,10 +19,10 @@ const Navbar = () => {
         setIsOn(!isOn);
         dispatch(toggleTheme());
     }
-    const handleLogout = async() => {
-      await logout(dispatch);
+    const handleLogout = async () => {
+        await logout(dispatch);
     }
-    
+
     return (
         <header className={`w-screen px-4  py-6 shadow-xl ${theme ? "bg-gradient-to-r from-[#1a0b1f] via-[#2b1a38] to-[#0e0a18]  text-white" : "bg-white text-black"} 
         transition-colors duration-300 linear sticky top-0  z-100
@@ -48,8 +49,11 @@ const Navbar = () => {
                                     <NavLink to="/cart" className="flex items-center gap-0.5 mt-0.5 relative group">
                                         <ShoppingCart className='inline-block mr-1' size={20} />
                                         <span className='hidden sm:inline'>Cart</span>
-                                        <span className='absolute bg-green-600 rounded-full -top-2 -left-2 text-white px-2 py-0.5 
-									text-xs'>3</span>
+
+                                       { cartItems.length > 0 && (<span className='absolute bg-green-600 rounded-full -top-2 -left-2 text-white px-2 py-0.5 
+									text-xs'>
+                                            {cartItems.length}
+                                        </span>)}
                                     </NavLink>
                                 </li>
                                 {

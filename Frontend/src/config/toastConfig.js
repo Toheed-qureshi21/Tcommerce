@@ -6,7 +6,7 @@ const toastConfig = (message, type = 'success') => {
         hideProgressBar: true, // Hide progress bar
         closeButton: true, 
     };
-
+    toast.dismiss();
     if (type === 'success') {
         toast.success(message, config);
     } else if (type === 'error') {

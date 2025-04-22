@@ -1,10 +1,12 @@
 import { MoveRight } from 'lucide-react';
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom';
+import { createPayment } from '../../API/api';
 
 const OrderSummary = () => {
-  const { cartItems, coupon, totalAmount, subTotalAmount, isCouponApplied } = useSelector((state) => state.cart);
+  const { cartItems, coupon, totalAmount, subTotalAmount, isCouponApplied,paymentButtonLoading} = useSelector((state) => state.cart);
+  const dispatch = useDispatch()
 
   const savings = subTotalAmount - totalAmount;
   const formattedSubtotal = subTotalAmount.toFixed(2);
@@ -38,7 +40,9 @@ const OrderSummary = () => {
           </dl>
         </div>
         <button
-          className='flex w-full items-center justify-center rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300'
+          className={`flex w-full items-center justify-center rounded-lg  px-5 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 ${paymentButtonLoading?"cursor-not-allowed bg-gray-600":"cursor-pointer bg-emerald-600"}`}
+          onClick={()=>createPayment(dispatch,cartItems,coupon)}
+          disabled={paymentButtonLoading}
         >
           Proceed to Checkout
         </button>

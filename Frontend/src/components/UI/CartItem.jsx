@@ -1,10 +1,16 @@
 import { Minus, Plus, Trash } from "lucide-react";
 import { removeItemFromCart, updateQuantity } from "../../API/api";
-import { useDispatch} from "react-redux";
+import { useDispatch, useSelector} from "react-redux";
 
 const CartItem = ({ item }) => {
+	const {loading} = useSelector(state=>state.cart);
 	const dispatch = useDispatch();
 	const handleDelete = (itemId) => removeItemFromCart(dispatch, itemId);
+	const handleUpdateQuantity = (id,quantity) => {
+	  updateQuantity(dispatch,id,quantity);
+	}
+	
+	
 	
 
 	return (
@@ -17,19 +23,21 @@ const CartItem = ({ item }) => {
 				<div className='flex items-center justify-between md:order-3 md:justify-end'>
 					<div className='flex items-center gap-2'>
 						<button
-							className='inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border
+							className={`inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border
 							 border-gray-600 bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2
-							  focus:ring-emerald-500'
-							onClick={()=>updateQuantity(dispatch,item._id,item.quantity-1)}
+							  focus:ring-emerald-500 ${loading ? "cursor-not-allowed opacity-75":"cursor-pointer"}`}
+							onClick={()=>handleUpdateQuantity(item.productId,item.quantity-1)}
+							disabled={loading}
 						>
 							<Minus className='text-gray-300' />
 						</button>
 						<p>{item.quantity}</p>
 						<button
-							className='inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border
-							 border-gray-600 bg-gray-700 hover:bg-gray-600 focus:outline-none 
-						focus:ring-2 focus:ring-emerald-500'
-							onClick={()=>updateQuantity(dispatch,item._id,item.quantity+1)}
+							className={`inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border
+								border-gray-600 bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2
+								 focus:ring-emerald-500 ${loading ? "cursor-not-allowed opacity-75":"cursor-pointer"}`}
+							onClick={()=>handleUpdateQuantity(item.productId,item.quantity+1)}
+							disabled={loading}
 						>
 							<Plus className='text-gray-300' />
 						</button>
@@ -48,9 +56,10 @@ const CartItem = ({ item }) => {
 
 					<div className='flex items-center gap-4'>
 						<button
-							className='inline-flex items-center text-sm font-medium text-red-400
-							 hover:text-red-300 hover:underline'
-							 onClick={()=>handleDelete(item._id)}
+							className={`inline-flex items-center text-sm font-medium text-red-400
+							 hover:text-red-300 hover:underline ${loading ? "cursor-not-allowed opacity-75":"cursor-pointer"}`}
+							 onClick={()=>handleDelete(item.productId)}
+							 disabled={loading}
 						>
 							<Trash />
 						</button>

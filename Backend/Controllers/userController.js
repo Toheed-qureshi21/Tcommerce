@@ -61,7 +61,7 @@ export const login = TryCatch(async (req, res) => {
         generateToken(res,user._id);
         const userWithoutPassword = {...user._doc,password:undefined};
         
-        return res.status(200).json({userWithoutPassword,message:"User logged in successfully"});
+        return res.status(200).json({userWithoutPassword,message:`Welcome back, ${user.name}! You’ve successfully logged in.`});
 });
 
 export const logout = TryCatch(async (req, res) => {
@@ -71,7 +71,7 @@ export const logout = TryCatch(async (req, res) => {
         sameSite:"strict"
     });
 
-    return res.status(200).json({message:"User logged out successfully"});
+    return res.status(200).json({message:`You’ve been logged out. See you soon!`});
 
 });
 

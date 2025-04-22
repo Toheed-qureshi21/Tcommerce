@@ -82,9 +82,9 @@ export const removeProductFromCart = TryCatch(async (req, res) => {
   const updatedUser = await User.findById(user._id).populate("cartItems.product");
 
   const cartItems = updatedUser.cartItems
-    .filter((item) => item.product)  // Ensure valid product reference
+    .filter((item) => item.product) 
     .map((item) => ({
-      productId: item.product._id,  // Correctly reference the product's _id
+      productId: item.product._id,  
       name: item.product.name,
       description: item.product.description,
       price: item.product.price,
@@ -93,15 +93,15 @@ export const removeProductFromCart = TryCatch(async (req, res) => {
     }));
 
   return res.status(200).json({
-    cartItems,                       // Return the updated list of cart items
+    cartItems,                       
     message: "Product removed from cart successfully"
   });
 });
-
+ 
 
 export const updateProductQuantity = TryCatch(async (req, res) => {
-  const { id } = req.params; // product ID
-  const { quantity } = req.body;
+  const { quantity } = req.body;  
+  const { id } = req.params;  
   const user = req.user;
 
   // Validate quantity
@@ -113,6 +113,7 @@ export const updateProductQuantity = TryCatch(async (req, res) => {
   const existingItem = user.cartItems.find(
     (item) => item.product?.toString() === id
   );
+
 
   if (!existingItem) {
     return res.status(404).json({ message: "Product not found in cart" });

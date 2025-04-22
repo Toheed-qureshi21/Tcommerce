@@ -1,5 +1,7 @@
 import { stripe } from "../Lib/stripe.js";
+import {User} from "../Models/userModel.js"
 import { Coupon } from "../Models/couponModel.js";
+import { Order } from "../Models/orderModel.js";
 import { TryCatch } from "../Utils/TryCatch.js"
 import { createNewCoupon, createStripeCoupon } from "../Utils/utils.js";
 
@@ -40,7 +42,7 @@ export const createCheckOutSession = TryCatch(async (req, res) => {
         line_items: items,
         mode: "payment",
         success_url: `${process.env.CLIENT_URL}/success-purchase?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${[process.env.CLIENT_URL]}/cancel-purchase`,
+        cancel_url: `${process.env.CLIENT_URL}/cancel-purchase`,
         discounts: coupon ? [{
             coupon: await createStripeCoupon(coupon.discount)
         }] : [],
@@ -58,7 +60,7 @@ export const createCheckOutSession = TryCatch(async (req, res) => {
     });
     // IF THE PURCHASE AMOUNT IS GREATER THAN 100 DOLLAR THEN WE HAVE TO CREATE A COUPON OF 10 PERCENT
     if (totalAmount >= 10000) {
-        await createNewCoupon(req.user_id);
+        await createNewCoupon(req.user._id);
     }
     // Total amount is in cents that's why we have to convert it to dollars
     return res.status(200).json({ id: session.id, totalAmount: totalAmount / 100 });
@@ -69,32 +71,60 @@ export const createCheckOutSession = TryCatch(async (req, res) => {
 export const verifyCheckOutSession = TryCatch(async (req, res) => {
     const { sessionId } = req.body;
     const session = await stripe.checkout.sessions.retrieve(sessionId);
+
     if (session.payment_status === "paid") {
+        // Check if an order already exists for this session
+        const existingOrder = await Order.findOne({ stripeSessionId: sessionId });
+
+        if (existingOrder) {
+            // Return the existing order if it's already in the database
+            return res.status(200).json({
+                success: true,
+                message: "Order already exists for this session.",
+                orderId: existingOrder._id, // Return the existing order ID
+            });
+        }
+
+        // If a coupon code is used, deactivate it
         if (session.metadata.couponCode) {
-            await Coupon.findOneAndUpdate({
-                code: session.metadata.couponCode,
-                userId: session.metadata.userId
-            },
+            await Coupon.findOneAndUpdate(
                 {
-                    isActive: false
+                    code: session.metadata.couponCode,
+                    userId: session.metadata.userId,
+                },
+                {
+                    isActive: false,
                 }
             );
         }
-        //Payment successful now Creating order
+
+        // Create a new order
         const products = JSON.parse(session.metadata.products);
         const newOrder = new Order({
             user: session.metadata.userId,
-            products: products.map((p) => ({
-                product: p.id,
-                quantity: p.quantity,
-                price: p.price
-            }))
+            products: products.map((product) => ({
+                product: product.id,
+                quantity: product.quantity,
+                price: product.price,
+            })),
+            totalAmount: session.amount_total / 100,  // Convert from cents to dollars
+            stripeSessionId: sessionId,
         });
-        await newOrder.save();
 
+        await newOrder.save();
+        await User.findByIdAndUpdate(session.metadata.userId, {
+            $set: { cartItems: [] }
+          });
         return res.status(200).json({
-            message: "Payment successful order created successfully",
+            success: true,
+            message: "Payment successful, order created, and coupon deactivated if used.",
             orderId: newOrder._id,
+        });
+    } else {
+        return res.status(400).json({
+            success: false,
+            message: "Payment failed or not completed.",
         });
     }
 });
+

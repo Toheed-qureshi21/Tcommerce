@@ -1,8 +1,9 @@
 import axios from "axios";
+import {loadStripe} from "@stripe/stripe-js"
 import { authChecking, authFailure, authStart, authSuccess, authCheckingFailure, authCheckingSuccess, resetAuth } from "../redux/slices/auth.slice.js";
 import { toast } from "react-toastify";
 import { addProduct, deleteProductFromState, setError, setLoading, setLoadingDelete, setLoadingFeature, setProducts, updateSingleProduct } from "../redux/slices/product.slice.js";
-import { calculateTotals, setCartErrors, setCartItems, setCartLoading, setRecommendedProducts } from "../redux/slices/cart.slice.js";
+import { calculateTotals, clearCart, setCartErrors, setCartItems, setCartLoading, setIsPurchaseProcessing, setPaymetButtonLoading, setRecommendedProducts } from "../redux/slices/cart.slice.js";
 import toastConfig from "../config/toastConfig.js";
 
 
@@ -190,7 +191,6 @@ export const removeItemFromCart = async (dispatch, productId) => {
         const response = await api.delete(`/cart/delete/${productId}`);
         dispatch(setCartItems(response?.data?.cartItems));
         dispatch(calculateTotals(response?.data?.cartItems));
-        console.log('Updated cart items:', response?.data?.cartItems);
         toastConfig(response?.data?.message || "Product removed from cart successfully!");
 
     } catch (error) {
@@ -200,11 +200,10 @@ export const removeItemFromCart = async (dispatch, productId) => {
 }
 
 // Function for updating quantity of product in cart
-export const updateQuantity = async (dispatch, productId, quantity) => {
+export const updateQuantity = async (dispatch,id,quantity) => {
     dispatch(setCartLoading(true));
-
     try {
-        const response = await api.put(`/cart/update/${productId}`, { quantity });
+        const response = await api.patch(`/cart/update/${id}`, {quantity });
         dispatch(setCartItems(response?.data?.cartItems));
         dispatch(calculateTotals(response?.data?.cartItems));
         toastConfig(response?.data?.message || "Product quantity updated successfully!");
@@ -220,11 +219,52 @@ export const fetchRecommendedProducts = async (dispatch) => {
     try {
         const response = await api.get("/products/recommendations");
         const recommendedProducts = response?.data?.products;
-        console.log("Recommended products:",recommendedProducts);
-        
         dispatch(setRecommendedProducts(recommendedProducts));
     } catch (error) {
         dispatch(setError(error.response.data.message));
         return toastConfig(error?.response?.data?.message || "Failed to fetch recommended products. Please try again.");
     }
 }
+
+// fUNCTION FOR CREATING PAYMENT
+export const createPayment = async (dispatch,cartItems,coupon) => {
+    dispatch(setPaymetButtonLoading(true));
+    try {
+        const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+        const response = await api.post("/payments/create-checkout-session", { products:cartItems, couponCode:coupon ? coupon.code : null });
+        const session  = response?.data;
+        const result = await stripe.redirectToCheckout({
+            sessionId: session.id
+        })
+        console.log(session);
+        if (result.error) {
+            console.log("Errors in payment", result.error);
+            
+        }
+
+    } catch (error) {
+        return toastConfig(error?.response?.data?.message);
+    } finally {
+        dispatch(setPaymetButtonLoading(false))
+    }
+}
+
+// Function for chekout-success for payment
+    export const handleCheckoutSuccess = async(dispatch,sessionId)=>{
+                dispatch(setIsPurchaseProcessing(true))
+            try {
+            const res = await api.post("/payments/verify-checkout-session",{sessionId});
+            if (res.data.success) {
+                dispatch(clearCart());
+                fetchCartItems(dispatch)
+            }
+            console.log(res.data);
+            
+
+                return toastConfig(res.data.message);
+            } catch (error) {
+                toastConfig(error.res.data.message||"Failed to verify payment. Please try again.");
+            } finally {
+                dispatch(setIsPurchaseProcessing(false));
+            }
+    }

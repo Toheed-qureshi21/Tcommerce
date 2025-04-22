@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { addProduct, deleteProductFromState, setError, setLoading, setLoadingDelete, setLoadingFeature, setProducts, updateSingleProduct } from "../redux/slices/product.slice.js";
 import { calculateTotals, clearCart, setCartErrors, setCartItems, setCartLoading, setCoupon, setIsCouponApplied, setIsPurchaseProcessing, setPaymetButtonLoading, setRecommendedProducts } from "../redux/slices/cart.slice.js";
 import toastConfig from "../config/toastConfig.js";
+import { setAnalyticsData, setAnalyticsLoading, setDailySalesData } from "../redux/slices/analytics.slice.js";
 
 
 
@@ -285,5 +286,17 @@ export const applyCoupon = async (dispatch,code) => {
     }
 }
 
-// Function to remove coupon 
+// Function to fetch analytics data
+export const getAnalyticsData = async (dispatch) => {
+    dispatch(setAnalyticsLoading(true));
+    try {
+        const response = await api.get("/analytics");
+        dispatch(setAnalyticsData(response.data.analyticsData));
+        dispatch(setDailySalesData(response.data.salesDataOfWeek));
+        dispatch(setAnalyticsLoading(false))
+    } catch (error) {
+        dispatch(setAnalyticsLoading(false));
+        return toastConfig(error?.response?.data?.message||"Failed to fetch analytics data. Please try again.");
+    }
+}
 

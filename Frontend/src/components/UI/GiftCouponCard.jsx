@@ -5,13 +5,14 @@ import { clearCoupon } from '../../redux/slices/cart.slice';
 
 const GiftCouponCard = () => {
 	const [userInputCoupon, setUserInputCoupon] = useState('');
+	const {cartItems} = useSelector(state=>state.cart)
 	const { coupon, isCouponApplied } = useSelector(state => state.cart);
 	const dispatch = useDispatch();
 	useEffect(() => {
 		getMyCoupon(dispatch);
 	}, []);
 	useEffect(() => {
-		if (coupon) {
+		if (coupon && cartItems.length>0) {
 			setUserInputCoupon(coupon.code)
 		}
 	}, [coupon]);

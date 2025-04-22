@@ -4,6 +4,7 @@ import formReducer from "../slices/form.slice.js";
 import authReducer from "../slices/auth.slice.js";
 import productReducer from "../slices/product.slice.js"
 import cartReducer from "../slices/cart.slice.js"
+import analyticsReducer from "../slices/analytics.slice.js"
 
 export const store = configureStore({
     reducer:{
@@ -11,6 +12,7 @@ export const store = configureStore({
         form:formReducer,
         auth:authReducer,
         products:productReducer,
-        cart:cartReducer
+        cart:cartReducer,
+        analyticsData:analyticsReducer
     }
 });

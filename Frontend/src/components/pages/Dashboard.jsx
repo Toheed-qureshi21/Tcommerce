@@ -26,7 +26,7 @@ const Dashboard = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex max-sm:flex-col items-center px-6 py-2 mx-2 rounded-md transition-colors duration-200 ${activeTab === tab.id
                     ? "bg-emerald-600 text-white"
-                    : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                    : "bg-gradient-to-r from-[#381e38] via-[#4f1579] to-[#2e0594]"
                   }`}
               >
                 <tab.icon className='mr-1 h-5 w-5' />

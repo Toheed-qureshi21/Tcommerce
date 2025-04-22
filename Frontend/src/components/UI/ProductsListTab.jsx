@@ -2,12 +2,12 @@ import { useEffect } from "react"
 import "../../index.css"
 import { deleteProduct, fetchAllProductsOfAdmin, toggleFeaturedProduct } from "../../API/api.js"
 import { useDispatch, useSelector } from 'react-redux';
-import { Star, Trash } from "lucide-react";
+import { Loader, Star, Trash } from "lucide-react";
 import { setLoadingFeature } from "../../redux/slices/product.slice.js";
 const ProductsListTab = () => {
 
 	const dispatch = useDispatch();
-	const { products,loadingDelete,loadingFeature } = useSelector(state => state.products)
+	const { loading,products,loadingDelete,loadingFeature } = useSelector(state => state.products)
 	useEffect(() => {
 		fetchAllProductsOfAdmin(dispatch);
 	}, []);
@@ -18,9 +18,15 @@ const ProductsListTab = () => {
 	
 
 	return (
-		<section className='shadow-lg rounded-lg overflow-x-scroll custom-scrollbar max-w-4xl mx-auto'>
+		<section className={`shadow-lg h-screen rounded-lg ${!loading && "overflow-x-scroll custom-scrollbar "} `}>
+			{
+				loading ? (
+					<div className="flex justify-center items-center ">
+				<div className="animate-spin text-white mt-[10rem]"><Loader size={40}/></div>
+					</div>
 
-			<table className=' min-w-full divide-y divide-gray-700 table-auto mx-auto w-[50%] text-left border-collapse'>
+				):(
+					<table className=' min-w-full divide-y divide-gray-700 table-auto mx-auto w-[50%] text-left border-collapse'>
 				<thead className='bg-gray-700'>
 					<tr>
 						<th
@@ -109,6 +115,9 @@ const ProductsListTab = () => {
 					}
 				</tbody>
 			</table>
+				)
+			}
+			
 		</section>
 	)
 }

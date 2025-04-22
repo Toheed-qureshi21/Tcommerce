@@ -15,16 +15,16 @@ const Dashboard = () => {
 
   return (
     <section className="min-h-screen ">
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 py-6 ">
 
         <h2 className="text-3xl font-bold text-center">Admin Dashboard</h2>
-        <div className="flex gap-4 justify-center mt-8 mb-6">
+        <div className="flex max-sm:flex-col gap-4 justify-center mt-8 mb-6">
           {tabs.map((tab) => {
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center px-6 py-2 mx-2 rounded-md transition-colors duration-200 ${activeTab === tab.id
+                className={`flex max-sm:flex-col items-center px-6 py-2 mx-2 rounded-md transition-colors duration-200 ${activeTab === tab.id
                     ? "bg-emerald-600 text-white"
                     : "bg-gray-700 text-gray-300 hover:bg-gray-600"
                   }`}
@@ -35,10 +35,11 @@ const Dashboard = () => {
             )
           })}
         </div>
+    
         {activeTab === "create" && <CreateProductTab/>}
         {activeTab === "products" && <ProductsListTab/>}
         {activeTab === "analytics" && <AnalyticsTab/>}
-      </div>
+        </div>
     </section>
   )
 }

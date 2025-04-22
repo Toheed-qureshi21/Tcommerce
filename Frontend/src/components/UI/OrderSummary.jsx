@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 import { createPayment } from '../../API/api';
 
 const OrderSummary = () => {
-  const { cartItems, coupon, totalAmount, subTotalAmount, isCouponApplied,paymentButtonLoading} = useSelector((state) => state.cart);
+  const { cartItems, coupon, totalAmount, subTotalAmount, isCouponApplied, paymentButtonLoading } = useSelector((state) => state.cart);
   const dispatch = useDispatch()
 
   const savings = subTotalAmount - totalAmount;
@@ -40,8 +40,8 @@ const OrderSummary = () => {
           </dl>
         </div>
         <button
-          className={`flex w-full items-center justify-center rounded-lg  px-5 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 ${paymentButtonLoading?"cursor-not-allowed bg-gray-600":"cursor-pointer bg-emerald-600"}`}
-          onClick={()=>createPayment(dispatch,cartItems,coupon)}
+          className={`flex w-full items-center justify-center rounded-lg  px-5 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 ${paymentButtonLoading ? "cursor-not-allowed bg-gray-600" : "cursor-pointer bg-emerald-600"}`}
+          onClick={() => createPayment(dispatch, cartItems, coupon)}
           disabled={paymentButtonLoading}
         >
           Proceed to Checkout

@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom'
 import { handleCheckoutSuccess } from '../../API/api';
+import PaymentProcessing from '../UI/PaymentProcessing';
 
 const PurchaseSuccessPage = () => {
 	const dispatch = useDispatch();
@@ -17,7 +18,7 @@ const PurchaseSuccessPage = () => {
 
 	if (isPurchaseProcessing) {
 		return (
-			<h1>Proceessing</h1>
+			<PaymentProcessing/>
 		)
 	}
 

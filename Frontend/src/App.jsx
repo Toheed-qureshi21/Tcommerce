@@ -13,6 +13,7 @@ import { checkingUser, fetchCartItems } from "./API/api.js";
 import Category from "./components/pages/Category.jsx";
 import PurchaseSuccessPage from "./components/pages/PurchaseSuccessPage.jsx";
 import PurchaseCancelPage from "./components/pages/PurchaseCancelPage.jsx";
+import LoadingScreen from "./components/UI/LoadingScreen.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -21,7 +22,6 @@ function App() {
   const location = useLocation();
   const hasCheckedUser = useRef(false);
 
-  // Fetch cart items when user is available
   useEffect(() => {
     if (user) {
       fetchCartItems(dispatch);
@@ -37,20 +37,16 @@ function App() {
       }
     }
   }, [dispatch, user, location.pathname]);
-
-  // Show loading spinner until authentication check is complete
-  if (loading) {
+  if(loading) {
     return (
-      <div className="w-full h-screen flex justify-center items-center bg-zinc-950">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white "></div>
-      </div>
+     <LoadingScreen/>
     );
   }
 
   return (
     <>
       <Navbar />
-      <main className={`w-screen ${theme ? "[background:radial-gradient(circle_at_center,_#1f1b2e_0%,_#15131e_60%,_#0e0c15_100%)] text-white" : "bg-white text-black"} transition-colors duration-300`}>
+      <main className={`w-screen [background:radial-gradient(circle_at_center,_#1f1b2e_0%,_#15131e_60%,_#0e0c15_100%)] text-white transition-colors duration-300`}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />

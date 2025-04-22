@@ -18,7 +18,7 @@ const ProductsListTab = () => {
 	
 
 	return (
-		<section className='shadow-lg rounded-lg overflow-hidden max-w-4xl mx-auto'>
+		<section className='shadow-lg rounded-lg overflow-x-scroll custom-scrollbar max-w-4xl mx-auto'>
 
 			<table className=' min-w-full divide-y divide-gray-700 table-auto mx-auto w-[50%] text-left border-collapse'>
 				<thead className='bg-gray-700'>

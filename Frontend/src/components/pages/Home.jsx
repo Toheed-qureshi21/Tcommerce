@@ -11,11 +11,11 @@ const Home = () => {
         <img
           src="/Landing.webp"
           alt="Landing background"
-          className="absolute h-screen w-screen object-cover"
+          className="absolute h-full w-full object-fill"
           loading='lazy'
         />
 
-        <div className="container relative ml-[3rem] max-sm:mr-[3rem] z-50 top-[2rem] sm:top-[10rem] flex flex-col gap-8">
+        <div className="container relative ml-[3rem] max-sm:mr-[3rem] z-50 top-[2rem]  flex flex-col gap-8">
           <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
             Shop Smarter,<br /> Live Better
           </h2>

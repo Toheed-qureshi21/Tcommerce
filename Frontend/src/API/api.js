@@ -3,7 +3,7 @@ import {loadStripe} from "@stripe/stripe-js"
 import { authChecking, authFailure, authStart, authSuccess, authCheckingFailure, authCheckingSuccess, resetAuth } from "../redux/slices/auth.slice.js";
 import { toast } from "react-toastify";
 import { addProduct, deleteProductFromState, setError, setLoading, setLoadingDelete, setLoadingFeature, setProducts, updateSingleProduct } from "../redux/slices/product.slice.js";
-import { calculateTotals, clearCart, setCartErrors, setCartItems, setCartLoading, setIsPurchaseProcessing, setPaymetButtonLoading, setRecommendedProducts } from "../redux/slices/cart.slice.js";
+import { calculateTotals, clearCart, setCartErrors, setCartItems, setCartLoading, setCoupon, setIsCouponApplied, setIsPurchaseProcessing, setPaymetButtonLoading, setRecommendedProducts } from "../redux/slices/cart.slice.js";
 import toastConfig from "../config/toastConfig.js";
 
 
@@ -29,12 +29,10 @@ export const signup = async (dispatch, { name, email, password, confirmPassword,
         }
 
         const response = await api.post("/auth/signup", { name, email, password, role });
-        console.log(response);
         dispatch(authSuccess(response?.data?.userWithoutPassword));
         toastConfig(response?.data?.message);
 
     } catch (error) {
-        console.log(error);
 
         dispatch(authFailure(error?.response?.data?.message));
 
@@ -159,7 +157,6 @@ export const fetchCartItems = async (dispatch) => {
         const response = await api.get("/cart/");
         const cartItems = response?.data?.cartItems;
         dispatch(calculateTotals(cartItems))
-        console.log(cartItems);
         dispatch(setCartItems(cartItems));
     } catch (error) {
         dispatch(setCartErrors(error.response.data.message));
@@ -236,10 +233,8 @@ export const createPayment = async (dispatch,cartItems,coupon) => {
         const result = await stripe.redirectToCheckout({
             sessionId: session.id
         })
-        console.log(session);
         if (result.error) {
-            console.log("Errors in payment", result.error);
-            
+            toastConfig(result.error);
         }
 
     } catch (error) {
@@ -258,9 +253,6 @@ export const createPayment = async (dispatch,cartItems,coupon) => {
                 dispatch(clearCart());
                 fetchCartItems(dispatch)
             }
-            console.log(res.data);
-            
-
                 return toastConfig(res.data.message);
             } catch (error) {
                 toastConfig(error.res.data.message||"Failed to verify payment. Please try again.");
@@ -268,3 +260,30 @@ export const createPayment = async (dispatch,cartItems,coupon) => {
                 dispatch(setIsPurchaseProcessing(false));
             }
     }
+
+// Function to get coupons 
+export const getMyCoupon = async (dispatch) => {
+    try {
+        const response = await api.get("/coupons");
+        dispatch(setCoupon(response.data));
+    } catch (error) {
+        return toastConfig(error?.response?.data?.message);
+    }
+    
+}
+
+// Function to apply coupon 
+export const applyCoupon = async (dispatch,code) => {
+    try {
+        const response = await api.post("/coupons/validate",{code});
+        dispatch(setCoupon(response.data.code));
+        dispatch(setIsCouponApplied(true));
+        dispatch(calculateTotals());
+        return toastConfig("Coupon applied successfully!");
+    } catch (error) {
+        return toastConfig(error?.response?.data?.message);
+    }
+}
+
+// Function to remove coupon 
+

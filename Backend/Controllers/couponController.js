@@ -8,8 +8,9 @@ export const getCoupon = TryCatch(async (req, res) => {
 
 export const validateCoupon = TryCatch(async(req,res)=>{
             const {code} = req.body;
+            await Coupon.deleteMany({isActive:false});
             const coupon = await Coupon.findOne({code:code,userId:req.user._id,isActive:true});
-
+            
             if(!coupon){
                 return res.status(400).json({message:"Coupon not found"});
             }

@@ -6,7 +6,7 @@ import 'react-alice-carousel/lib/alice-carousel.css';
 const Crousel = () => {
     const responsive = {
         0: { items: 1 },
-        600: { items: 2 },
+        500: { items: 2 },
         1024: { items: 5 },
       };
       const categoryItems = categories?.map(p => (

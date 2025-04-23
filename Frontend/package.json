@@ -19,6 +19,7 @@
     "lucide-react": "^0.483.0",
     "react": "^19.0.0",
     "react-alice-carousel": "^2.9.1",
+    "react-confetti-boom": "^1.1.2",
     "react-dom": "^19.0.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.4.0",

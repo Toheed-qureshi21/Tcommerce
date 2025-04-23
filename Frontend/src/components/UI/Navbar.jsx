@@ -64,19 +64,19 @@ import {
                     )}
                   </NavLink>
                 </li>
-                {isAdmin ? (
+                {isAdmin && (
                   <li>
                     <NavLink to="/dashboard" className="flex items-center gap-0.5 bg-green-600 text-white hover:bg-green-700 transition-all linear px-2.5 py-1 rounded-md">
                       <Lock size={20} /> Dashboard
                     </NavLink>
                   </li>
-                ) : (
+                ) }
                   <li>
-                    <NavLink to="/profile" className="flex items-center gap-0.5 bg-green-600 hover:bg-green-700 transition-all linear px-2.5 py-1 rounded-md">
+                    <NavLink to="/profile" className="flex items-center gap-0.5 bg-indigo-500 hover:bg-indigo-700 transition-all linear px-2.5 py-1 rounded-md">
                       <User size={20} /> Profile
                     </NavLink>
                   </li>
-                )}
+              
                 <li>
                   <button onClick={handleLogout} className="flex gap-2 items-center bg-sky-600 text-white hover:bg-sky-700 transition-all linear px-2.5 py-1 rounded-md">
                     <LogIn size={20} /> Logout
@@ -117,7 +117,7 @@ import {
             <X size={28} />
           </button>
   
-          <ul className="flex flex-col mt-24 gap-6 px-6 text-lg">
+          <ul className="flex flex-col  mt-24 gap-6 px-6 text-lg">
             <li>
               <NavLink to="/" onClick={toggleMenu}>Home</NavLink>
             </li>
@@ -134,21 +134,20 @@ import {
                     )}
                   </NavLink>
                 </li>
-                {isAdmin ? (
+                {isAdmin && (
                   <li>
-                    <NavLink to="/dashboard" onClick={toggleMenu} className="flex items-center gap-2">
+                    <NavLink to="/dashboard" onClick={toggleMenu} className="w-fit justify-center flex items-center gap-2 bg-green-600 text-white hover:bg-green-700 transition-all linear px-3 py-2 rounded-md text-center">
                       <Lock size={20} /> Dashboard
                     </NavLink>
                   </li>
-                ) : (
+                )}
                   <li>
-                    <NavLink to="/profile" onClick={toggleMenu} className="flex items-center gap-2">
+                    <NavLink to="/profile" onClick={toggleMenu} className="flex items-center justify-center gap-2 bg-indigo-500 hover:bg-indigo-700 w-fit transition-all linear px-8 rounded-md py-2">
                       <User size={20} /> Profile
                     </NavLink>
                   </li>
-                )}
                 <li>
-                  <button onClick={handleLogout} className="flex gap-2 items-center bg-sky-600 hover:bg-sky-700 transition-all linear px-3 py-2 rounded-md text-white">
+                  <button onClick={handleLogout} className="flex gap-2 items-center bg-sky-600 hover:bg-sky-700 transition-all linear px-8 py-2 rounded-md text-white">
                     <LogIn size={20} /> Logout
                   </button>
                 </li>

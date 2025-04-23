@@ -49,16 +49,17 @@ h1:hover{
     transform: translateX(100%);
   }
 }
-/* Custom Scrollbar CSS */
+/* Custom Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
-  height: 6px;
+  height: 8px;
+  width: 6px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #e2e8f0; /* Tailwind's gray-200 */
+  background: #2d3748; /* Tailwind gray-800 */
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #a0aec0; /* Tailwind's gray-400 */
+  background-color: #a0aec0; /* Tailwind gray-400 */
   border-radius: 8px;
 }

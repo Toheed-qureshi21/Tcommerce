@@ -9,9 +9,11 @@ const Login = () => {
   const loading = useSelector(state=>state.auth.loading);
   const navigate = useNavigate();
   const handleLogin = async(formData) => {
-      await login(dispatch,formData);
-      sessionStorage.setItem("fromLogin", "true");
-      return navigate("/")
+     const loginStatus = await login(dispatch,formData);
+     if(loginStatus===true){
+        sessionStorage.setItem("fromLogin", "true");
+        return navigate("/")
+      }
   }
 
   return (

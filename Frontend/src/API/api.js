@@ -37,7 +37,7 @@ export const signup = async (dispatch, { name, email, password, confirmPassword,
 
         dispatch(authFailure(error?.response?.data?.message));
 
-        return toastConfig(error?.response?.data?.message);
+        return toastConfig(error?.response?.data?.message,"error");
     }
 }
 
@@ -49,12 +49,18 @@ export const login = async (dispatch, { email, password }) => {
         }
 
 
-        const { data } = await api.post("/auth/login", { email, password });
-        dispatch(authSuccess(data?.userWithoutPassword))
-        return toastConfig(data?.message);
+        const response  = await api.post("/auth/login", { email, password });
+        dispatch(authSuccess(response?.data?.userWithoutPassword))
+        toastConfig(response?.data?.message,"success");
+        if (response.status === 200) {
+            return true;
+        } else {
+            return false;
+        }
     } catch (error) {
         dispatch(authFailure(error?.response?.data?.message));
-        return toastConfig(error?.response?.data?.message);
+        toastConfig(error?.response?.data?.message,"error");
+        return false;
     }
 }
 
@@ -66,7 +72,7 @@ export const checkingUser = async (dispatch, showToast = false) => {
         showToast && toastConfig(response?.data?.message);
     } catch (error) {
         dispatch(authFailure(error?.response?.data?.message));
-        showToast && toastConfig(error?.response?.data?.message);
+        showToast && toastConfig(error?.response?.data?.message,"error");
     }
 }
 
@@ -80,7 +86,7 @@ export const logout = async (dispatch) => {
     } catch (error) {
         dispatch(authFailure(error?.response?.data?.message));
         if (showToast) {
-            toastConfig(error?.response?.data?.message);
+            toastConfig(error?.response?.data?.message,"error");
         }
     }
 }
@@ -94,7 +100,7 @@ export const createProduct = async (dispatch, newProduct) => {
         toastConfig(response?.data?.message || "Product created successfully!");
     } catch (error) {
         dispatch(setError(error));
-        return toastConfig(error?.response?.data?.message);
+        return toastConfig(error?.response?.data?.message,"error");
     }
 }
 
@@ -107,7 +113,7 @@ export const fetchAllProductsOfAdmin = async (dispatch) => {
         dispatch(setProducts(products));
     } catch (error) {
         dispatch(setError(error));
-        return toastConfig(error?.response?.data?.message || "Failed to fetch products. Please try again.");
+        return toastConfig(error?.response?.data?.message || "Failed to fetch products. Please try again.","error");
     }
 }
 
@@ -121,7 +127,7 @@ export const toggleFeaturedProduct = async (dispatch, productId) => {
         return toastConfig(response?.data?.message || "Product featured successfully!");
     } catch (error) {
         dispatch(setError(error));
-        return toastConfig(error?.response?.data?.message || "Failed to feature product. Please try again.");
+        return toastConfig(error?.response?.data?.message || "Failed to feature product. Please try again.","error");
     }
 }
 
@@ -134,7 +140,7 @@ export const deleteProduct = async (dispatch, productId) => {
         return toastConfig(response?.data?.message || "Product deleted successfully!");
     } catch (error) {
         dispatch(setError(error));
-        return toastConfig(error?.response?.data?.message || "Failed to Delete product. Please try again.");
+        return toastConfig(error?.response?.data?.message || "Failed to Delete product. Please try again.","error");
     }
 }
 
@@ -147,7 +153,7 @@ export const fetchCategoryWiseProducts = async (dispatch, category) => {
         dispatch(setProducts(products));
     } catch (error) {
         dispatch(setError(error.response.data.message));
-        return toastConfig(error?.response?.data?.message || "Failed to fetch products. Please try again.");
+        return toastConfig(error?.response?.data?.message || "Failed to fetch products. Please try again.","error");
     }
 }
 
@@ -161,7 +167,7 @@ export const fetchCartItems = async (dispatch) => {
         dispatch(setCartItems(cartItems));
     } catch (error) {
         dispatch(setCartErrors(error.response.data.message));
-        return toastConfig(error?.response?.data?.message || "Failed to fetch cart items. Please try again.");
+        return toastConfig(error?.response?.data?.message || "Failed to fetch cart items. Please try again.","error");
     }
 }
 
@@ -178,7 +184,7 @@ export const addToCart = async (dispatch, productId) => {
         toastConfig(response?.data?.message || "Product added to cart successfully!");
     } catch (error) {
         dispatch(setCartErrors(error.response.data.message));
-        toastConfig(error?.response?.data?.message || "Failed to add product to cart. Please try again.");
+        toastConfig(error?.response?.data?.message || "Failed to add product to cart. Please try again.","error");
     }
 }
 
@@ -193,7 +199,7 @@ export const removeItemFromCart = async (dispatch, productId) => {
 
     } catch (error) {
         dispatch(setCartErrors(error.response.data.message));
-        toastConfig(error?.response?.data?.message || "Failed to remove product from cart. Please try again.");
+        toastConfig(error?.response?.data?.message || "Failed to remove product from cart. Please try again.","error");
     }
 }
 
@@ -207,7 +213,7 @@ export const updateQuantity = async (dispatch,id,quantity) => {
         toastConfig(response?.data?.message || "Product quantity updated successfully!");
     } catch (error) {
         dispatch(setCartErrors(error?.response?.data?.message));
-        toastConfig(error?.response?.data?.message || "Failed to update product quantity. Please try again.");
+        toastConfig(error?.response?.data?.message || "Failed to update product quantity. Please try again.","error");
     }
 }
 
@@ -220,7 +226,7 @@ export const fetchRecommendedProducts = async (dispatch) => {
         dispatch(setRecommendedProducts(recommendedProducts));
     } catch (error) {
         dispatch(setError(error.response.data.message));
-        return toastConfig(error?.response?.data?.message || "Failed to fetch recommended products. Please try again.");
+        return toastConfig(error?.response?.data?.message || "Failed to fetch recommended products. Please try again.","error");
     }
 }
 
@@ -239,7 +245,7 @@ export const createPayment = async (dispatch,cartItems,coupon) => {
         }
 
     } catch (error) {
-        return toastConfig(error?.response?.data?.message);
+        return toastConfig(error?.response?.data?.message,"error");
     } finally {
         dispatch(setPaymetButtonLoading(false))
     }
@@ -256,7 +262,7 @@ export const createPayment = async (dispatch,cartItems,coupon) => {
             }
                 return toastConfig(res.data.message);
             } catch (error) {
-                toastConfig(error.res.data.message||"Failed to verify payment. Please try again.");
+                toastConfig(error.res.data.message||"Failed to verify payment. Please try again.","error");
             } finally {
                 dispatch(setIsPurchaseProcessing(false));
             }
@@ -268,7 +274,7 @@ export const getMyCoupon = async (dispatch) => {
         const response = await api.get("/coupons");
         dispatch(setCoupon(response.data));
     } catch (error) {
-        return toastConfig(error?.response?.data?.message);
+        return toastConfig(error?.response?.data?.message,"error");
     }
     
 }
@@ -282,7 +288,7 @@ export const applyCoupon = async (dispatch,code) => {
         dispatch(calculateTotals());
         return toastConfig("Coupon applied successfully!");
     } catch (error) {
-        return toastConfig(error?.response?.data?.message);
+        return toastConfig(error?.response?.data?.message,"error");
     }
 }
 
@@ -296,7 +302,17 @@ export const getAnalyticsData = async (dispatch) => {
         dispatch(setAnalyticsLoading(false))
     } catch (error) {
         dispatch(setAnalyticsLoading(false));
-        return toastConfig(error?.response?.data?.message||"Failed to fetch analytics data. Please try again.");
+        return toastConfig(error?.response?.data?.message||"Failed to fetch analytics data. Please try again.","error");
     }
 }
 
+export const updateProfile = async (dispatch,{userDetails}) => {
+        dispatch(authStart());
+        try {
+            const response = await api.patch("/auth/change-profile",{userDetails});
+            dispatch(authSuccess(response?.data?.userWithoutPassword));
+            toastConfig(response?.data?.message);
+        } catch (error) {
+            toastConfig(error?.response?.data?.message,"error");
+        }
+}

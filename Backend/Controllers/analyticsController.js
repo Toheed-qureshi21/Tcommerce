@@ -5,8 +5,8 @@ import { TryCatch } from "../Utils/TryCatch.js";
 
 
 export const getAnalytics = TryCatch(async (req, res) => {
-
-    const analyticsData = await getAnalyticsData();
+    const userId = req?.user?._id;
+    const analyticsData = await getAnalyticsData(userId);
 
     const endDate = new Date();
     const startDate = new Date(endDate.getTime() - 6 * 24 * 60 * 60 * 1000);
@@ -15,12 +15,16 @@ export const getAnalytics = TryCatch(async (req, res) => {
     return res.status(200).json({ analyticsData, salesDataOfWeek });
 });
 
-async function getAnalyticsData() {
+async function getAnalyticsData(userId) {
     try {
-        const totalUsers = await User.countDocuments();
-        const totalProducts = await Product.countDocuments();
+        const totalProducts = await Product.countDocuments({userId});
 
         const salesData = await Order.aggregate([
+            {
+                $match:{
+                    user:userId,
+                }
+            },
             {
                 $group: {
                     _id: null,
@@ -32,7 +36,6 @@ async function getAnalyticsData() {
         // Because it returns an array 
         const { totalSales, totalRevenue } = salesData[0];
         return {
-            users: totalUsers,
             products: totalProducts,
             totalSales,
             totalRevenue

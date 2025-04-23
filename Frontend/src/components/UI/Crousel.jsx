@@ -1,20 +1,33 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { NavLink } from 'react-router-dom';
 import categories from '../../Data/products.json';
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
+import { ArrowLeftCircleIcon, ArrowRightCircleIcon } from 'lucide-react';
 const Crousel = () => {
+    const crouselRef = useRef(null);
+    const handlePrev  = () => {
+      if (crouselRef.current) {
+        crouselRef.current.slidePrev()
+      }
+    }
+    const handleNext =  () => {
+      if (crouselRef.current) {
+        crouselRef.current.slideNext()
+      }
+    }
+    
     const responsive = {
         0: { items: 1 },
         500: { items: 2 },
-        1024: { items: 5 },
+        1024: { items: 4 },
       };
       const categoryItems = categories?.map(p => (
-        <div className="space-x-1" key={p.name}>
+        <div className="space-x-8" key={p.name}>
     
         <NavLink
           to={`/category/${p.name.toLowerCase()}`}
-          className="inline-block  min-w-[12rem] h-[12rem] border relative hover:brightness-75 transition-all duration-300 rounded overflow-hidden "
+          className="inline-block ml-12 min-w-[12rem] h-[12rem] border relative hover:brightness-75 transition-all duration-300 rounded overflow-hidden "
           
           >
           <img
@@ -30,18 +43,24 @@ const Crousel = () => {
             </div>
       ));
   return (
+    <div className='flex relative w-full items-center justify-center'> 
+    <button onClick={handlePrev} className="absolute left-1 sm:left-[-1.5rem] z-10 text-white hover:text-blue-600 transition-transform hover:scale-110"><ArrowLeftCircleIcon/></button>
     <AliceCarousel
     mouseTracking
     infinite
-    style={{ display: 'flex', justifyContent: 'space-between' }}
+    style={{ display: 'flex', justifyContent: 'space-between'}}
     autoPlay
     autoPlayInterval={1000}
     animationDuration={1000}
     disableDotsControls
     disableButtonsControls
+    keyboardNavigation={true}
+    ref={crouselRef}
     items={categoryItems}
     responsive={responsive}
     />
+    <button onClick={handleNext} className='absolute right-4 z-10 text-white hover:text-blue-600 transition-transform hover:scale-110'><ArrowRightCircleIcon/></button>
+    </div>
   )
 }
 

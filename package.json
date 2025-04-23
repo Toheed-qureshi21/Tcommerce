@@ -4,7 +4,9 @@
   "main": "Backend/server.js",
   "type": "module",
   "scripts": {
-    "start": "node --watch Backend/server.js"
+    "dev": "node --watch Backend/server.js",
+    "start":"node Backend/server.js",
+    "build":"npm install && npm install --prefix Frontend && npm run build --prefix Frontend"
   },
   "keywords": [],
   "author": "",

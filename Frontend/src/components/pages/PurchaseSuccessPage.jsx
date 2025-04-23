@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom'
 import { handleCheckoutSuccess } from '../../API/api';
 import PaymentProcessing from '../UI/PaymentProcessing';
+import Confetti from 'react-confetti-boom';
 
 const PurchaseSuccessPage = () => {
 	const dispatch = useDispatch();
 	const {isPurchaseProcessing} = useSelector(state=>state.cart);
-
 	useEffect(()=>{
 		const sessionId = new URLSearchParams(window.location.search).get("session_id");
 		if (sessionId && !isPurchaseProcessing) {  // Only make request if not processing
@@ -24,6 +24,11 @@ const PurchaseSuccessPage = () => {
 
 	return (
 		<section className='h-screen flex items-center justify-center px-4'>
+			<Confetti
+			  particleCount={150}
+			  width={window.innerWidth}
+			  height={window.innerHeight}
+			/>
 			<div className='max-w-md w-full bg-gray-800 rounded-lg shadow-xl overflow-hidden relative z-10'>
 				<div className='p-6 sm:p-8'>
 					<div className='flex justify-center'>

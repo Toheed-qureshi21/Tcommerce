@@ -56,7 +56,7 @@ export const login = TryCatch(async (req, res) => {
 
         const comparePassword =  await bcrypt.compare(password,user.password);
         if (!comparePassword) {
-            return res.status(400).json({ message: "Invalid credentials" });
+            return res.status(401).json({ message: "Invalid credentials" });
         }
         generateToken(res,user._id);
         const userWithoutPassword = {...user._doc,password:undefined};
@@ -87,4 +87,21 @@ export const getProfile = TryCatch(async (req, res) => {
     const userWithoutPassword = { ...user._doc, password: undefined };
     return res.status(200).json({userWithoutPassword});
 });
+
+export const toChangeProfile = TryCatch(async (req, res) => {
+    const {name,email,role} = req.body.userDetails;
+    
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(401).json({ message: "Unauthorized: No user found" });
+        }
+        user.name = name || user.name;
+        user.email = email|| user.email;
+        user.role  = role|| user.role;
+        await user.save();
+        user.password = undefined
+        const userWithoutPassword = user; 
+        return res.status(200).json({ userWithoutPassword,message: "Profile updated successfully" });
+});
+
 

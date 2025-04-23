@@ -1,7 +1,4 @@
-
 import Crousel from '../UI/Crousel';
-
-
 const Home = () => {
 
   return (
@@ -15,8 +12,8 @@ const Home = () => {
           loading='lazy'
         />
 
-        <div className="container relative ml-[3rem] max-sm:mr-[3rem] z-50 top-[2rem]  flex flex-col gap-8">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
+        <div className="container font-medium relative ml-[3rem] max-sm:mr-[3rem] z-50 top-[2rem]  flex flex-col gap-8">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl max-sm:mt-[2rem]">
             Shop Smarter,<br /> Live Better
           </h2>
           <p className="text-md sm:text-xl md:text-2xl">

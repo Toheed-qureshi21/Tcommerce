@@ -1,6 +1,6 @@
 import express from "express"
 
-import { getProfile, login, logout, signup } from "../Controllers/userController.js";
+import { getProfile, login, logout, signup, toChangeProfile } from "../Controllers/userController.js";
 import {authenticate} from "../middlewares/auth.js"
 
 const router = express.Router();
@@ -12,5 +12,5 @@ router.post("/login",login)
 
 
 router.get("/logout",logout)
-
+router.patch("/change-profile",authenticate,toChangeProfile);
 export default router

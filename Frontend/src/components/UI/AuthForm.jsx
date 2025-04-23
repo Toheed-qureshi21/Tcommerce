@@ -31,12 +31,10 @@ const AuthForm = ({
         e.preventDefault();
         await onSubmit(formData);
         dispatch(resetFormData());
-        return navigate("/");
-
     }
 
     const handleGuestLogin = () => {
-        dispatch(updateFormData({ email: "example@gmail.com", password: "000000" }));
+        dispatch(updateFormData({ email: "guest@example.com", password: "000000" }));
     }
 
     return (
@@ -168,12 +166,20 @@ const AuthForm = ({
                     isGuest && (
                         <button
                             onClick={handleGuestLogin}
-                            type="button" className="bg-red-400 py-2 text-black rounded-md hover:cursor-pointer hover:bg-red-500">
+                            type="button" className="bg-red-800 py-2 text-white rounded-md hover:cursor-pointer hover:bg-red-900">
                             {loading ? "Loading..." : "Login as Guest"}
                         </button>
                     )
+                }{
+                    isGuest && (
+                        <NavLink to="/forgot-password" className="text-center">Forgot Password?</NavLink>
+                    )
                 }
-
+                <div className="flex items-center my-4">
+                    <div className="flex-1 border-t border-gray-400"></div>
+                    <span className="px-2 text-gray-600 font-medium">OR</span>
+                    <div className="flex-1 border-t border-gray-400"></div>
+                </div>
                 <p className="text-center text-md">
                     {redirectText}{" "}
                     <NavLink to={redirectLink} className={`${!showNameField ? "text-green-700 hover:text-green-800" : "text-sky-700 hover:text-sky-800"}`}>

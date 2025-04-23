@@ -1,4 +1,4 @@
-import { MoveRight } from 'lucide-react';
+import { Loader2Icon, MoveRight } from 'lucide-react';
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom';
@@ -44,7 +44,13 @@ const OrderSummary = () => {
           onClick={() => createPayment(dispatch, cartItems, coupon)}
           disabled={paymentButtonLoading}
         >
-          Proceed to Checkout
+          {paymentButtonLoading ? (
+            <span className="flex items-center gap-2">
+              Processing <Loader2Icon className="animate-spin" />
+            </span>
+          ) : (
+            "Proceed to Checkout"
+          )}
         </button>
         <div className='flex items-center justify-center gap-2'>
           <span className='text-sm font-normal text-gray-400'>or</span>

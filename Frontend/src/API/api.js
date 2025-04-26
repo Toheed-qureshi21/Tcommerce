@@ -9,7 +9,8 @@ import { setAnalyticsData, setAnalyticsLoading, setDailySalesData } from "../red
 
 
 
-const URL = import.meta.mode === "development" ? "http://localhost:3000/api" : "/api"
+const URL = "/api"
+
 
 const api = axios.create({
     baseURL: URL,

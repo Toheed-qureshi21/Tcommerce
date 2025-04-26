@@ -1,12 +1,12 @@
 {
   "name": "ecommerce",
   "version": "1.0.0",
-  "main": "backend/server.js",
+  "main": "Backend/server.js",
   "type": "module",
   "scripts": {
-    "dev": "node --watch backend/server.js",
-    "start":"node backend/server.js",
-    "build":"npm install && npm install --prefix frontend && npm run build --prefix frontend"
+    "dev": "node --watch Backend/server.js",
+    "start":"node Backend/server.js",
+    "build":"npm install && npm install --prefix Frontend && npm run build --prefix Frontend"
   },
   "keywords": [],
   "author": "",

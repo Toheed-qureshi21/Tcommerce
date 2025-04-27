@@ -47,7 +47,7 @@ function App() {
   return (
     <>
       <Navbar />
-      <main className={`w-screen [background:radial-gradient(circle_at_center,_#1f1b2e_0%,_#15131e_60%,_#0e0c15_100%)] text-white transition-colors duration-300`}>
+      <main className={`w-full overflow-hidden [background:radial-gradient(circle_at_center,_#1f1b2e_0%,_#15131e_60%,_#0e0c15_100%)] text-white transition-colors duration-300`}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />

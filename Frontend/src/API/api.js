@@ -235,7 +235,7 @@ export const fetchRecommendedProducts = async (dispatch) => {
 export const createPayment = async (dispatch,cartItems,coupon) => {
     dispatch(setPaymetButtonLoading(true));
     try {
-        const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+        const stripe = await loadStripe("pk_test_51QzcKlKHxSEe6HXrt4nAu38pcn2C0YAJ5RjOlqOthiNy5p8bYWZ5vraE0gcscgLCOokeKCEQIWEPHO1UKE3THQNY00WnIiXmMK");
         const response = await api.post("/payments/create-checkout-session", { products:cartItems, couponCode:coupon ? coupon.code : null });
         const session  = response?.data;
         const result = await stripe.redirectToCheckout({

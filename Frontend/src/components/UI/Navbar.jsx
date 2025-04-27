@@ -36,10 +36,10 @@ import {
     };
   
     return (
-      <header className="w-screen px-4 py-6 shadow-xl bg-gradient-to-r from-[#1a0b1f] via-[#2b1a38] to-[#0e0a18] text-white  sticky top-0 z-[1000]">
-        <nav className="mx-8 container flex justify-between items-center">
+      <header className="w-full overflow-hidden max-lg:px-8 py-6 shadow-xl bg-gradient-to-r from-[#1a0b1f] via-[#2b1a38] to-[#0e0a18] text-white  sticky top-0 z-[1000]">
+        <nav className="px- lg:px-12 flex justify-between items-center w-screen">
           {/* Logo */}
-          <h1 className="font-sans text-4xl font-jaini z-50">TCOMMERCE</h1>
+          <h1 className="font-sans text-4xl font-jaini z-50 ">TCOMMERCE</h1>
   
           {/* Hamburger Icon */}
           <button onClick={toggleMenu} className="lg:hidden z-50 mr-12 ">

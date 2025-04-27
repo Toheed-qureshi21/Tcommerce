@@ -3,11 +3,10 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom';
 import { createPayment } from '../../API/api';
-
 const OrderSummary = () => {
   const { cartItems, coupon, totalAmount, subTotalAmount, isCouponApplied, paymentButtonLoading } = useSelector((state) => state.cart);
   const dispatch = useDispatch()
-
+  
   const savings = subTotalAmount - totalAmount;
   const formattedSubtotal = subTotalAmount.toFixed(2);
   const formattedTotal = totalAmount.toFixed(2);

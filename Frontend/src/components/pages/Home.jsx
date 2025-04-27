@@ -12,7 +12,7 @@ const Home = () => {
           loading='lazy'
         />
 
-        <div className="container font-medium relative ml-[3rem] max-sm:mr-[3rem] z-50 top-[2rem]  flex flex-col gap-8">
+        <div className="font-medium relative max-lg:mx-8 md:ml-[3rem] max-sm:mr-[3rem] z-50 top-[2rem] pr-8 flex flex-col gap-8 w-full">
           <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl max-sm:mt-[2rem]">
             Shop Smarter,<br /> Live Better
           </h2>

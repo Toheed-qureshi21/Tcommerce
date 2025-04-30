@@ -18,7 +18,7 @@ export const getAnalytics = TryCatch(async (req, res) => {
 async function getAnalyticsData(userId) {
     try {
         const totalProducts = await Product.countDocuments({userId});
-
+        
         const salesData = await Order.aggregate([
             {
                 $match:{
@@ -34,12 +34,16 @@ async function getAnalyticsData(userId) {
             }
         ]);
         // Because it returns an array 
-        const { totalSales, totalRevenue } = salesData[0];
-        return {
-            products: totalProducts,
-            totalSales,
-            totalRevenue
+        if (salesData.length>0) {
+            
+            const { totalSales, totalRevenue } = salesData[0];
+            return {
+                products: totalProducts,
+                totalSales,
+                totalRevenue
+            }
         }
+        return null
 
     } catch (error) {
         throw error;

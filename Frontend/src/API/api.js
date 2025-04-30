@@ -317,3 +317,32 @@ export const updateProfile = async (dispatch,{userDetails}) => {
             toastConfig(error?.response?.data?.message,"error");
         }
 }
+export const postEmailToForgotPassword = async(email)=>{
+    try {
+        const response = await api.post("/auth/reset-password",{email});
+        toastConfig(response?.data?.message);
+    } catch (error) {
+        toastConfig(error?.response?.data?.message,"error");
+    }
+};
+export const getToken= async(token)=>{
+    try {
+        const response = await api.get(`/auth/reset-password/${token}`); 
+        toastConfig(response?.data?.message);
+        return response?.data?.success;
+    } catch (error) {
+        toastConfig(error?.response?.data?.message,"error");
+        return { success: false };
+    }
+}
+
+export const postNewPassword = async (newPassword,confirmPassword,token) => {
+        
+        try {
+            const response = await api.post(`/auth/reset-password/${token}`,{newPassword,confirmPassword});
+            toastConfig(response?.data?.message);
+            return response?.data;
+        } catch (error) {
+            toastConfig(error?.response?.data?.message,"error");
+        }
+}

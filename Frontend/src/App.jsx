@@ -15,6 +15,7 @@ import PurchaseSuccessPage from "./components/pages/PurchaseSuccessPage.jsx";
 import PurchaseCancelPage from "./components/pages/PurchaseCancelPage.jsx";
 import LoadingScreen from "./components/UI/LoadingScreen.jsx";
 import ForgotPassword from "./components/pages/ForgotPassword.jsx";
+import ResetPassword from "./components/pages/ResetPassword.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -59,6 +60,9 @@ function App() {
           <Route path="/success-purchase"  element={<PurchaseSuccessPage />}  />
           <Route path="/cancel-purchase" element={user ? <PurchaseCancelPage /> : <Navigate to="/login" />} />
           <Route path="/forgot-password" element={<ForgotPassword/>} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+
+
         </Routes>
         <ToastContainer position="top-center" />
       </main>

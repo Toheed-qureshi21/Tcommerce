@@ -2,13 +2,14 @@ import bcrypt from "bcryptjs";
 import { generateToken } from "../Lib/generateToken.js";
 import { User } from "../Models/userModel.js";
 import { TryCatch } from "../Utils/TryCatch.js"
-import { generateResetPasswordLink, getPasswordResetData, updatePassword } from "../Services/user.service.js";
+import { createVerifyEmailLink, findVerificationEmailToken, generateResetPasswordLink, generateVerificationToken, getPasswordResetData, updatePassword, verifyUserEmailAndUpdate } from "../Services/user.service.js";
 import fs from "fs/promises"
 import path from "path"
 import mjml2html from "mjml";
 import { sendEmail } from "../Lib/nodemailer.js";
 import { ForgotPassword } from "../Models/forgotPasswordModel.js";
 import ejs from "ejs"
+import { VerifyEmail } from "../Models/emailVerifyModel.js";
 
 export const signup = TryCatch(async (req, res) => {
 
@@ -177,4 +178,64 @@ export const postResetPassword = TryCatch(async (req, res) => {
         await updatePassword(userId,newPassword,salt);
         return res.status(201).json({ success: true, message: "Password reset successfully" });
 
+})
+
+// Email verification functions
+export const verifyEmailToken = TryCatch(async (req, res) => {
+
+    const { token } = req.body;
+
+
+    const tokenOtp = await findVerificationEmailToken(token);
+    if (!tokenOtp) {
+        return res.status(400).json({ error: "Invalid token" });
+    }
+    await verifyUserEmailAndUpdate(tokenOtp)
+
+    return res.status(200).json({ message: "Email verified successfully" });
+
+})
+export const sendVerificationLink = TryCatch(async (req, res) => {
+        if (!req.user) {
+            return res.redirect("/login");
+        }
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        const randomToken = generateVerificationToken();
+        await VerifyEmail.deleteMany({ userId: user._id });
+        await VerifyEmail.create({
+            userId: user._id,
+            token: randomToken
+        });
+        // ! Creating url with random token
+
+        const verifyEmailLink = createVerifyEmailLink(user.email, randomToken);
+
+        // ! Using mjml email template instead of html
+        const mjmlTemplate = await fs.readFile(path.join(import.meta.dirname, "../Emails/verify-email.mjml"), "utf-8");
+        // ! Step 2:- To replace placeholder in .mjml file with actual values of links and randomToken
+        const filledMjmlTemplate = ejs.render(mjmlTemplate, {
+            code: randomToken,
+            link: verifyEmailLink
+        })
+
+        //! Step:-3 To convert mjml file to html file
+        const htmlOutputOfMjmlFile = mjml2html(filledMjmlTemplate).html;
+
+
+        //! Now we have to send email in user gmail using resend instead of nodemailer
+        // ! So this sendEmail function of nodemailer get replaced by sendEmail function of resend
+        // ! Full file of nodemailer is in Libs/nodemailer.js gets commented
+
+        sendEmail({
+            to: user.email,
+            subject: "Verify your email",
+            html: htmlOutputOfMjmlFile
+        }).catch((err) => {
+            console.log(err);
+            return res.status(500).json({ error: "Internal server error" });
+        });
+        return res.status(200).json({ message: "Email sent successfully" });
 })

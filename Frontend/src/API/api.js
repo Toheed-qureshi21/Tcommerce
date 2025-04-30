@@ -346,3 +346,23 @@ export const postNewPassword = async (newPassword,confirmPassword,token) => {
             toastConfig(error?.response?.data?.message,"error");
         }
 }
+
+// Email verification functions
+export const getEmailVerificationEmail = async()=>{
+    try {
+        const response = await api.get(`/auth/send-verification-link`);
+        console.log(response.data);
+        return toastConfig(response?.data?.message);
+    } catch (error) {
+        toastConfig(error?.response?.data?.message,"error");
+    }
+}
+
+export const sendOTP = async(token) => {
+    try {
+        const response = await api.post(`/auth/verify-email-link`,{token});
+        return toastConfig(response?.data?.message);
+    } catch (error) {
+        toastConfig(error?.response?.data?.message,"error");
+    }
+}

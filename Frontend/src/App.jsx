@@ -16,6 +16,7 @@ import PurchaseCancelPage from "./components/pages/PurchaseCancelPage.jsx";
 import LoadingScreen from "./components/UI/LoadingScreen.jsx";
 import ForgotPassword from "./components/pages/ForgotPassword.jsx";
 import ResetPassword from "./components/pages/ResetPassword.jsx";
+import VerifyEmail from "./components/pages/VerifyEmail.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -61,7 +62,7 @@ function App() {
           <Route path="/cancel-purchase" element={user ? <PurchaseCancelPage /> : <Navigate to="/login" />} />
           <Route path="/forgot-password" element={<ForgotPassword/>} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
-
+          <Route path="/verify-email-link" element={<VerifyEmail email={user?.email||null}/>}/>
 
         </Routes>
         <ToastContainer position="top-center" />

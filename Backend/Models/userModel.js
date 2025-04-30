@@ -34,6 +34,11 @@
             enum: ["user", "admin"],
             default: "user"
         },
+        isEmail_Verified:{
+            type:Boolean,
+            required:true,
+            default:false
+        }
 
     }, {
         timestamps: true

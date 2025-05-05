@@ -10,8 +10,9 @@ import {
   import { useDispatch, useSelector } from 'react-redux';
   import { NavLink } from 'react-router-dom';
   import { toggleTheme } from '../../redux/slices/theme.slice';
-  import { useState } from 'react';
+  import { useEffect, useState } from 'react';
   import { logout } from '../../API/api';
+import { resetAuth } from '../../redux/slices/auth.slice';
   
   const Navbar = () => {
     const [isOn, setIsOn] = useState(false);
@@ -25,9 +26,14 @@ import {
       setIsOn(!isOn);
       dispatch(toggleTheme());
     };
-  
+    useEffect(() => {
+      if (!isUser) {
+      }
+      
+    },[])
     const handleLogout = async () => {
-      await logout(dispatch);
+     dispatch(resetAuth(null));
+    window.location.href = "http://localhost:3000/api/auth/logout","_self";
       setIsMenuOpen(false);
     };
   
@@ -78,9 +84,11 @@ import {
                   </li>
               
                 <li>
-                  <button onClick={handleLogout} className="flex gap-2 items-center bg-sky-600 text-white hover:bg-sky-700 transition-all linear px-2.5 py-1 rounded-md">
+                  <NavLink target='_blank' to="http://localhost:3000/api/auth/logout">
+                  <button onClick={handleLogout}  className="flex gap-2 items-center bg-sky-600 text-white hover:bg-sky-700 transition-all linear px-2.5 py-1 rounded-md">
                     <LogIn size={20} /> Logout
                   </button>
+                    </NavLink>   
                 </li>
               </>
             ) : (

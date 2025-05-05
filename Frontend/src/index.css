@@ -32,7 +32,9 @@ h1:hover{
 .common-th{
   @apply px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider
 }
-
+.common-login-btn{
+  @apply py-2  border border-gray-600 text-white  rounded-md flex items-center justify-center gap-3
+}
 /* In your global CSS file or within a <style> tag in the component */
 .truck-animation {
   animation: moveTruck 5s ease-in-out infinite;

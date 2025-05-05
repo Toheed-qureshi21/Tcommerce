@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import { generateToken } from "../Lib/generateToken.js";
 import { User } from "../Models/userModel.js";
 import { TryCatch } from "../Utils/TryCatch.js"
-import { createVerifyEmailLink, findVerificationEmailToken, generateResetPasswordLink, generateVerificationToken, getPasswordResetData, updatePassword, verifyUserEmailAndUpdate } from "../Services/user.service.js";
+import { createVerifyEmailLink, findVerificationEmailToken, generateResetPasswordLink, generateVerificationToken, getPasswordResetData, getUserWithOauthId, updatePassword, verifyUserEmailAndUpdate } from "../Services/user.service.js";
 import fs from "fs/promises"
 import path from "path"
 import mjml2html from "mjml";
@@ -10,6 +10,11 @@ import { sendEmail } from "../Lib/nodemailer.js";
 import { ForgotPassword } from "../Models/forgotPasswordModel.js";
 import ejs from "ejs"
 import { VerifyEmail } from "../Models/emailVerifyModel.js";
+import { decodeIdToken, generateCodeVerifier, generateState } from "arctic";
+import { google } from "../Lib/google.js";
+import { OAuthAccount } from "../Models/oauthAccountModel.js";
+import { github } from "../Lib/github.js";
+import { get } from "http";
 
 export const signup = TryCatch(async (req, res) => {
 
@@ -73,13 +78,30 @@ export const login = TryCatch(async (req, res) => {
 });
 
 export const logout = TryCatch(async (req, res) => {
-    res.cookie("token", "", {
-        maxAge: 0,
-        httpOnly: true,
-        sameSite: "strict"
-    });
+    const userId = req.user._id;
 
-    return res.status(200).json({ message: `You’ve been logged out. See you soon!` });
+    // Check if user logged in with Google
+    const googleOAuthAccount = await OAuthAccount.findOne({
+        userId: userId,
+        provider: "google",
+    });
+    const githubOAuthAccount = await OAuthAccount.findOne({
+        userId: userId,
+        provider: "github",
+    });
+    // Clear cookies
+    res.clearCookie("token", { path: "/" });
+    res.clearCookie("google_oauth_code_verifier", { path: "/" });
+    res.clearCookie("google_oauth_state", { path: "/" });
+    res.clearCookie("google_oauth_token", { path: "/" });
+    if (googleOAuthAccount) {
+        await OAuthAccount.deleteOne({ _id: googleOAuthAccount._id });
+        return res.redirect("https://accounts.google.com/Logout");
+    }
+     if(githubOAuthAccount){
+        await OAuthAccount.deleteOne({ _id: githubOAuthAccount._id });
+    }  
+    return res.redirect(`${process.env.CLIENT_URL}/login`);
 
 });
 
@@ -238,4 +260,169 @@ export const sendVerificationLink = TryCatch(async (req, res) => {
             return res.status(500).json({ error: "Internal server error" });
         });
         return res.status(200).json({ message: "Email sent successfully" });
+})
+
+export const getGoogleConsentPage = TryCatch(async (req,res) => {
+
+    // To create authorization url
+    const state = generateState();
+    const codeVerifier = generateCodeVerifier();
+    const scopes = ["openid", "profile","email"]
+    const redirectUri = process.env.NODE_ENV === 'production' 
+    ? 'https://tcommerce.onrender.com/api/auth/google/callback'  // Production
+    : 'http://localhost:3000/api/auth/google/callback';
+    const url = google.createAuthorizationURL(state,codeVerifier,scopes,{
+        prompt: "consent select_account",
+        access_type: "offline",
+        include_granted_scopes: false,
+        redirect_uri: redirectUri,
+    });
+    const cookieConfig = {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        maxAge:100*60*60*1000,
+    }
+    res.cookie("google_oauth_state",state,cookieConfig)
+    res.cookie("google_oauth_code_verifier",codeVerifier,cookieConfig)
+
+    return res.redirect(url.toString());
+}
+)
+
+export const getGoogleCallback = TryCatch(async (req,res) => {
+
+        const { state, code } = req.query;
+        const { google_oauth_state: storedStateInCookie, google_oauth_code_verifier: storedCodeVerifier } = req.cookies;
+        
+        // Validate the state and code
+        if (!state || !code || !storedStateInCookie || !storedCodeVerifier || state !== storedStateInCookie) {
+           return res.status(400).json({ error: "Invalid state or code" });
+        }
+    
+        let tokens;
+        try {
+            // Validate the authorization code
+            tokens = await google.validateAuthorizationCode(code, storedCodeVerifier);
+            const claims = decodeIdToken(tokens.idToken());
+            
+    
+            const { sub: googleUserId, email, name } = claims;
+    
+            // 1. Check if OAuthAccount exists for the Google user
+            let oauthAccount = await OAuthAccount.findOne({
+                provider: "google",
+                providerAccountId: googleUserId
+            });
+            let user;
+    
+            // 2. If OAuthAccount does not exist, create a new one
+            if (!oauthAccount) {
+                // Check if a user already exists with this email
+                 user = await User.findOne({ email }).select("-password");
+    
+                if (!user) {
+                    // If no user exists with this email, create a new user
+                    user = await User.create({ name, email, isEmail_Verified: true });
+                }
+    
+                // Create a new OAuthAccount and link it to the user
+                oauthAccount = await OAuthAccount.create({
+                    userId: user._id,
+                    provider: "google",
+                    providerAccountId: googleUserId
+                });
+            } else {
+                // If OAuthAccount exists, retrieve the linked user
+                user = await User.findById(oauthAccount.userId).select("-password");
+            }
+    
+            // Generate the token and redirect the user to the home page
+            generateToken(res, oauthAccount.userId || user._id);
+            res.clearCookie("google_oauth_state");
+            res.clearCookie("google_oauth_code_verifier");
+    
+            return res.redirect(process.env.CLIENT_URL);
+        } catch (error) {
+            return res.status(500).json({ message:error.message });
+        }
+
+});
+
+export const getGithubConsentPage = TryCatch(async (req,res) => {
+     // Generate state for CSRF protection
+    const state = generateState();
+    const url = github.createAuthorizationURL(state, [
+        "user:email",
+    ]);
+    const cookieConfig = {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        maxAge:100*60*60*1000,
+    }
+    res.cookie("github_oauth_state",state,cookieConfig)
+    return res.redirect(url.toString());
+});
+
+export const getGithubCallback = TryCatch(async (req,res) => {
+        const { state, code } = req.query;
+        const {github_oauth_state: storedStateInCookie} = req.cookies;
+        if (!state || !code || !storedStateInCookie || state !== storedStateInCookie) {
+            return res.status(400).json({ message: "Invalid state or code" });
+        }
+        let tokens;
+        try {
+            tokens = await github.validateAuthorizationCode(code);
+        } catch (error) {
+            return res.status(400).json({ message: "Something went wrong while validating the authorization code" });
+        }
+        const githubResponse = await fetch("https://api.github.com/user",{
+            headers: {
+                Authorization: `Bearer ${tokens.accessToken()}`
+            }
+        });
+        const {id:githubUserId,name} = await githubResponse.json();
+
+        const githubEmailResponse = await fetch("https://api.github.com/user/emails",{
+            headers: {
+                Authorization: `Bearer ${tokens.accessToken()}`
+            }
+        });
+        if (!githubEmailResponse.ok) {
+            const errorData = await githubEmailResponse.json();
+            return res.status(400).json({ message: "Error fetching emails from GitHub" });
+        }
+        
+        const emails = await githubEmailResponse.json();
+        
+        const email = emails?.filter((e)=>e.primary)[0].email;
+        if (!email) {
+            return res.status(400).json({ message: "No email found" });
+            
+        }
+        // Condition : 1 --> IF USer already exists with github oauth account as well as by normal registration
+        let user = await getUserWithOauthId({email,"provider":"github"});
+        
+        // Condition 2 --> if user exists with same email but not linked with google oauth account
+        if(user&&!user.providerAccountId){
+            await OAuthAccount.create({
+                userId: user.id,
+                provider: "github",
+                providerAccountId: githubUserId
+            });
+        }
+        // Condition 3 :--> If user does not exists 
+        if(!user){
+            await User.create({ name, email, isEmail_Verified: true });
+            user = await User.findOne({ email }).select("-password");
+            await OAuthAccount.create({
+                userId: user.id,
+                provider: "github",
+                providerAccountId: githubUserId
+            });
+        }
+        generateToken(res, user.id);
+        res.clearCookie("github_oauth_state");
+        return res.redirect(process.env.CLIENT_URL);    
 })

@@ -4,6 +4,7 @@ import { config } from "dotenv";
 import bcrypt from "bcryptjs";
 import { User } from "../Models/userModel.js";
 import { VerifyEmail } from "../Models/emailVerifyModel.js";
+import { OAuthAccount } from "../Models/oauthAccountModel.js";
 
 config();
 export const generateResetPasswordLink =async (userId) => {
@@ -75,3 +76,25 @@ export const verifyUserEmailAndUpdate = async ({ email, userId }) => {
     await VerifyEmail.deleteMany({userId});
     return user;
 }
+export async function getUserWithOauthId({ email, provider }) {
+    // First, find the user by email
+    const user = await User.findOne({ email });
+  
+    if (!user) return null;
+  
+    // Then, find the corresponding OAuth account
+    const oauthAccount = await OAuthAccount.findOne({
+      userId: user._id,
+      provider,
+    });
+  
+    const userInfo = {
+      id: user?._id,
+      name: user?.name,
+      email: user?.email,
+      isEmailValid: user?.isEmail_Verified,
+      providerAccountId: oauthAccount?.providerAccountId || null,
+      provider: oauthAccount?.provider || null,
+    };
+    return userInfo
+  }

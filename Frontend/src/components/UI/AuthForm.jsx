@@ -38,10 +38,10 @@ const AuthForm = ({
     }
 
     const handleLoginWithGoogle = () => {
-        window.open("http://localhost:3000/api/auth/google", "_self");
+        window.open(import.meta.mode === "production" ? "https://tcommerce.onrender.com/api/auth/google" : "http://localhost:3000/api/auth/google", "_self");
     }
     const handleLoginWithGithub = () => {
-      window.open("http://localhost:3000/api/auth/github", "_self");
+      window.open(import.meta.mode === "production" ? "https://tcommerce.onrender.com/api/auth/google" : "http://localhost:3000/api/auth/github", "_self");
     }
     
 

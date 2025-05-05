@@ -1,20 +1,20 @@
+import fs from "fs/promises"
+import path from "path"
 import bcrypt from "bcryptjs";
+import ejs from "ejs"
+import mjml2html from "mjml";
+import { decodeIdToken, generateCodeVerifier, generateState } from "arctic";
+
 import { generateToken } from "../Lib/generateToken.js";
 import { User } from "../Models/userModel.js";
 import { TryCatch } from "../Utils/TryCatch.js"
 import { createVerifyEmailLink, findVerificationEmailToken, generateResetPasswordLink, generateVerificationToken, getPasswordResetData, getUserWithOauthId, updatePassword, verifyUserEmailAndUpdate } from "../Services/user.service.js";
-import fs from "fs/promises"
-import path from "path"
-import mjml2html from "mjml";
 import { sendEmail } from "../Lib/nodemailer.js";
 import { ForgotPassword } from "../Models/forgotPasswordModel.js";
-import ejs from "ejs"
 import { VerifyEmail } from "../Models/emailVerifyModel.js";
-import { decodeIdToken, generateCodeVerifier, generateState } from "arctic";
 import { google } from "../Lib/google.js";
 import { OAuthAccount } from "../Models/oauthAccountModel.js";
 import { github } from "../Lib/github.js";
-import { get } from "http";
 
 export const signup = TryCatch(async (req, res) => {
 

@@ -11,7 +11,6 @@ import {
   import { NavLink } from 'react-router-dom';
   import { toggleTheme } from '../../redux/slices/theme.slice';
   import { useEffect, useState } from 'react';
-  import { logout } from '../../API/api';
 import { resetAuth } from '../../redux/slices/auth.slice';
   
   const Navbar = () => {
@@ -33,7 +32,7 @@ import { resetAuth } from '../../redux/slices/auth.slice';
     },[])
     const handleLogout = async () => {
      dispatch(resetAuth(null));
-    window.location.href = "http://localhost:3000/api/auth/logout","_self";
+    window.location.href = import.meta.mode === "production" ? "https://tcommerce.onrender.com/api/auth/logout" : "http://localhost:3000/api/auth/logout","_self";
       setIsMenuOpen(false);
     };
   

@@ -21,7 +21,7 @@ A complete eCommerce web application built with the **MERN stack**, supporting s
 - ⚛️ React 19
 - 🌬️ Tailwind CSS 4
 - ⚙️ Redux Toolkit
-- 📦 Axios, React Router, Toastify, Framer Motion, Recharts
+- 📦 Axios, React Router, Toastify, Recharts
 
 ### 🔧 Backend
 - 🟩 Node.js

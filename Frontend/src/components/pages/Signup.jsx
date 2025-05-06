@@ -20,7 +20,7 @@ const Signup = () => {
     redirectLink="/login" 
     redirectLinkText="Login here" 
     onSubmit={handleSignup}
-    authText="Welcome back! Please enter your details to login."
+    authText="Hey there! Please enter your details to signup."
     loading={loading}
     isGuest={false}
   />

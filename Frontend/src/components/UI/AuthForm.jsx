@@ -38,10 +38,10 @@ const AuthForm = ({
     }
 
     const handleLoginWithGoogle = () => {
-        window.open(import.meta.mode === "production" ? "https://tcommerce.onrender.com/api/auth/google" : "http://localhost:3000/api/auth/google", "_self");
+        window.open(import.meta.env.PROD === "production" ? "https://tcommerce.onrender.com/api/auth/google" : "http://localhost:3000/api/auth/google", "_self");
     }
     const handleLoginWithGithub = () => {
-      window.open(import.meta.mode === "production" ? "https://tcommerce.onrender.com/api/auth/google" : "http://localhost:3000/api/auth/github", "_self");
+      window.open(import.meta.env.PROD === "production" ? "https://tcommerce.onrender.com/api/auth/google" : "http://localhost:3000/api/auth/github", "_self");
     }
     
 
@@ -179,7 +179,10 @@ const AuthForm = ({
                                 {loading ? "Loading..." : "Login as Guest"}
 
                             </button>
-                            <button className="common-login-btn" onClick={handleLoginWithGoogle}>
+                            <button 
+                            className="common-login-btn" 
+                            onClick={handleLoginWithGoogle}
+                            >
                                 <span>
                                     Login with Google
                                 </span>
@@ -211,7 +214,7 @@ const AuthForm = ({
                 </div>
                 {
                     isGuest && (
-                        <NavLink to="/forgot-password" className="text-center">Forgot Password?</NavLink>
+                        <NavLink to="/forgot-password" className="text-center hover:text-blue-400">Forgot Password?</NavLink>
                     )
                 }
 

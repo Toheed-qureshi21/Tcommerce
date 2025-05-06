@@ -41,7 +41,7 @@ const AuthForm = ({
         window.open(import.meta.env.PROD ? "https://tcommerce.onrender.com/api/auth/google" : "http://localhost:3000/api/auth/google", "_self");
     }
     const handleLoginWithGithub = () => {
-      window.open(import.meta.env.PROD ? "https://tcommerce.onrender.com/api/auth/google" : "http://localhost:3000/api/auth/github", "_self");
+      window.open(import.meta.env.PROD ? "https://tcommerce.onrender.com/api/auth/github" : "http://localhost:3000/api/auth/github", "_self");
     }
     
 

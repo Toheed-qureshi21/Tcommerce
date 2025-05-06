@@ -43,7 +43,7 @@ const Profile = () => {
           'radial-gradient(circle at center, #1f1b2e 0%, #15131e 60%, #0e0c15 100%)',
       }}
     >
-      <div className="max-sm:mx-8 bg-[#1f1b2e] text-white shadow-2xl rounded-2xl w-full h-fit max-w-md p-6  border border-white/10">
+      <div className="max-sm:mx-16 bg-[#1f1b2e] text-white shadow-2xl rounded-2xl h-fit  p-6  border border-white/10">
         <h2 className="text-2xl font-bold mb-6 text-center">User Profile</h2>
 
         {/* Display Profile or Edit Form */}
@@ -75,17 +75,18 @@ const Profile = () => {
                   </p>
                 </div>
               </div>
-                <div className='flex justify-between mb-8'>
-              <div className="flex items-center gap-4">
+                <div className='flex justify-between mb-8 items-center'>
+              <div className="flex items-center gap-4 ">
                 <Mail className="text-white/70" />
                 <div>
                   <p className="text-sm text-white/60">Email Verified</p>
-                  <p className="text-md font-semibold">{user.isEmail_Verified ?  <span className='flex gap-2 items-center'>Verified<Check className='bg-green-600 rounded-full p-1'/></span>: <span className='flex gap-2 items-center'>Not Verified<X className='bg-red-600 rounded-full p-1'/></span>}</p>
+                  <p className="text-md font-semibold">{user.isEmail_Verified ?  <span className='flex gap-1 sm:gap-2 items-center'>Verified<Check className='bg-green-600 rounded-full ' size={20}/></span>: <span className='flex gap-2 items-center'>Not Verified<X className='bg-red-600 rounded-full p-1' size={20}/></span>}</p>
                 </div>
               </div>
+      
               {
                 user.isEmail_Verified === false && (
-                  <NavLink to="/verify-email-link" className='ml-[10rem]'>
+                  <NavLink to="/verify-email-link" className=' ml-[7rem] sm:ml-[10rem]'>
                   <button className='text-sm text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-full'>Verify</button>
                 </NavLink>
                 ) 

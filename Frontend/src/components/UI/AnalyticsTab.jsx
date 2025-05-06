@@ -1,4 +1,4 @@
-import { DollarSign, Loader, Package, ShoppingCart } from 'lucide-react';
+import { DollarSign, Loader, Loader2, Package, ShoppingCart } from 'lucide-react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -25,9 +25,11 @@ const AnalyticsTab = () => {
 
   if (analyticsLoading) {
     return (
-      <div className="flex justify-center items-center h-[70vh]">
-        <div className="animate-spin text-white"><Loader size={40} /></div>
+      <div className="flex justify-center ">
+      <div className="animate-spin text-white">
+        <Loader2 size={40} />
       </div>
+    </div>
     );
   }
 

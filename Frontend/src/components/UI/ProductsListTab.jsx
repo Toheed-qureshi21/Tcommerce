@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import "../../index.css";
 import { deleteProduct, fetchAllProductsOfAdmin, toggleFeaturedProduct } from "../../API/api.js";
 import { useDispatch, useSelector } from "react-redux";
-import { Loader, Star, Trash } from "lucide-react";
+import { Loader2, Star, Trash } from "lucide-react";
 
 const ProductsListTab = () => {
   const dispatch = useDispatch();
@@ -19,11 +19,12 @@ const ProductsListTab = () => {
   return (
     <section className="shadow-lg h-screen rounded-lg p-4 ">
       {loading ? (
-        <div className="flex justify-center items-center h-full">
-          <div className="animate-spin text-white">
-            <Loader size={40} />
-          </div>
-        </div>
+      <div className="flex justify-center ">
+      <div className="animate-spin text-white">
+        <Loader2 size={40} />
+      </div>
+    </div>
+    
       ) : (
         <div className="overflow-x-auto custom-scrollbar rounded-lg">
           <table className="min-w-[700px] w-full table-auto text-left border-collapse">

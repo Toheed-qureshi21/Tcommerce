@@ -13,7 +13,7 @@ const URL = `${import.meta.env.VITE_SERVER_URL}/api`
 
 const api = axios.create({
     baseURL: URL,
-    withCredentials: true
+    withCredentials: true 
 });
 
 export const signup = async (dispatch, { name, email, password, confirmPassword, role }) => {

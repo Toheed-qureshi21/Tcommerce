@@ -9,8 +9,7 @@ import { setAnalyticsData, setAnalyticsLoading, setDailySalesData } from "../red
 
 
 
-const URL = "/api"
-
+const URL = `${import.meta.env.VITE_SERVER_URL}/api`
 
 const api = axios.create({
     baseURL: URL,

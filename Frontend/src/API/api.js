@@ -183,9 +183,12 @@ export const addToCart = async (dispatch, productId) => {
         dispatch(setCartItems(response?.data?.cartItems));
         dispatch(calculateTotals(response?.data?.cartItems));
         toastConfig(response?.data?.message || "Product added to cart successfully!");
+        
     } catch (error) {
         dispatch(setCartErrors(error.response.data.message));
         toastConfig(error?.response?.data?.message || "Failed to add product to cart. Please try again.","error");
+    } finally{
+        setCartLoading(false)
     }
 }
 

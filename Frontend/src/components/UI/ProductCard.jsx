@@ -1,17 +1,18 @@
-import { ShoppingCart } from 'lucide-react'
+import { Loader2, ShoppingCart } from 'lucide-react'
 import React from 'react'
 import { addToCart } from '../../API/api';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const ProductCard = ({product}) => {
     const dispatch = useDispatch();
+    const {loading} = useSelector(state=>state.cart);
     const handleAddToCart = async(productId) => {
         await addToCart(dispatch, productId);
       }
   return (
-    <div className='flex w-full relative flex-col overflow-hidden rounded-lg border border-gray-700 shadow-lg'>
+    <div className='flex w-fit relative flex-col overflow-hidden rounded-lg border border-gray-700 shadow-lg'>
     <div className='relative mx-3 mt-4 flex h-60 overflow-hidden rounded-xl'>
-        <img className='object-cover w-full' src={product.image} alt='product image' />
+        <img className='object-cover ' src={product.image} alt='product image' />
         <div className='absolute inset-0  bg-opacity-20' />
     </div>
 
@@ -23,12 +24,25 @@ const ProductCard = ({product}) => {
             </p>
         </div>
         <button
-            className='flex items-center justify-center rounded-lg bg-emerald-600 px-5 py-2.5 text-center text-sm font-medium
-             text-white hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300'
+            className={`flex items-center justify-center rounded-lg  px-5 py-2.5 text-center text-sm font-medium
+             text-white  focus:outline-none  ${loading?"cursor-not-allowed  bg-gray-600":"cursor-pointer bg-emerald-600 hover:bg-emerald-700 focus:ring-4 focus:ring-emerald-300"}`}
             onClick={()=>handleAddToCart(product._id)}
+            disabled={loading}
         >
-            <ShoppingCart size={22} className='mr-2' />
-            Add to cart
+            {
+                loading ? (
+                    <span className='flex gap-4 '>
+                        Processing
+                        <Loader2 size={22} className='mr-2 animate-spin'/>
+                    </span>
+                ):(
+                    <span className='flex gap-2'>
+
+                    <ShoppingCart size={22} className='mr-2' />
+                    Add to cart
+                    </span>
+                )
+            }
         </button>
     </div>
 </div>

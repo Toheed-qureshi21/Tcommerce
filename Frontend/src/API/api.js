@@ -11,6 +11,7 @@ import { setAnalyticsData, setAnalyticsLoading, setDailySalesData } from "../red
 
 const URL = `${import.meta.env.VITE_SERVER_URL}/api`
 
+
 const api = axios.create({
     baseURL: URL,
     withCredentials: true 

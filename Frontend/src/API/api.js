@@ -10,6 +10,8 @@ import { setAnalyticsData, setAnalyticsLoading, setDailySalesData } from "../red
 
 
 const URL = import.meta.env.PROD ?`${import.meta.env.VITE_SERVER_URL}/api`:"http://localhost:3000/api"
+console.log();
+
 
 
 const api = axios.create({

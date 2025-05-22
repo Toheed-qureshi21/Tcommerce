@@ -15,6 +15,7 @@ import { VerifyEmail } from "../Models/emailVerifyModel.js";
 import { google } from "../Lib/google.js";
 import { OAuthAccount } from "../Models/oauthAccountModel.js";
 import { github } from "../Lib/github.js";
+import { cookieConfig } from "../Constant/constant.js";
 
 export const signup = TryCatch(async (req, res) => {
 
@@ -269,7 +270,7 @@ export const getGoogleConsentPage = TryCatch(async (req,res) => {
     const codeVerifier = generateCodeVerifier();
     const scopes = ["openid", "profile","email"]
     const redirectUri = process.env.NODE_ENV === 'production' 
-    ? 'https://tcommerce.onrender.com/api/auth/google/callback'  // Production
+    ? 'https://tcommerce-k9nb.onrender.com/api/auth/google/callback'  // Production
     : 'http://localhost:3000/api/auth/google/callback';
     const url = google.createAuthorizationURL(state,codeVerifier,scopes,{
         prompt: "consent select_account",
@@ -355,12 +356,7 @@ export const getGithubConsentPage = TryCatch(async (req,res) => {
     const url = github.createAuthorizationURL(state, [
         "user:email",
     ]);
-    const cookieConfig = {
-        httpOnly: true,
-        secure: false,
-        sameSite: "lax",
-        maxAge:100*60*60*1000,
-    }
+   
     res.cookie("github_oauth_state",state,cookieConfig)
     return res.redirect(url.toString());
 });

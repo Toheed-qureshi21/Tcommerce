@@ -32,7 +32,7 @@ import { resetAuth } from '../../redux/slices/auth.slice';
     },[])
     const handleLogout = async () => {
      dispatch(resetAuth(null));
-    window.open(import.meta.env.PROD ? "https://tcommerce.onrender.com/api/auth/logout" : "http://localhost:3000/api/auth/logout", "_self");
+    window.open(import.meta.env.PROD ? "https://tcommerce-k9nb.onrender.com/api/auth/logout" : "http://localhost:3000/api/auth/logout", "_self");
       setIsMenuOpen(false);
     };
   

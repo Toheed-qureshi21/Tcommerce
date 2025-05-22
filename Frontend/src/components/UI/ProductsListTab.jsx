@@ -26,6 +26,7 @@ const ProductsListTab = () => {
     </div>
     
       ) : (
+      
         <div className="overflow-x-auto custom-scrollbar rounded-lg">
           <table className="min-w-[700px] w-full table-auto text-left border-collapse">
             <thead className="bg-gray-700 text-white">

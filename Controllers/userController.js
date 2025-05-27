@@ -220,7 +220,7 @@ export const verifyEmailToken = TryCatch(async (req, res) => {
 })
 export const sendVerificationLink = TryCatch(async (req, res) => {
         if (!req.user) {
-            return res.redirect("/login");
+            return res.redirect(`${process.env.CLIENT_URL}/login`);
         }
         const user = await User.findById(req.user._id);
         if (!user) {

@@ -22,11 +22,10 @@ app.use(express.json({limit:"10mb"}));
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser());
 app.use(cors({
-    origin:"https://tcommerce.vercel.app",
+    origin:"http://localhost:5173",
     credentials: true,
   })
 );
-console.log("CORS origin:","https://tcommerce.vercel.app");
 
 app.use("/api/auth",userRouter); 
 app.use("/api/products",productRoutes);
